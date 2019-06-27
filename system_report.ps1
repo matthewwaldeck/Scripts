@@ -1,5 +1,16 @@
 ﻿cls
 
+#INTRO
+#This little script gives you a really basic overview of your system.
+#The idea of this is to speed up basic diagnostics.
+
+#TO-DO
+#Figure out a more elegant solution to writing log files
+#Final touches on formatting
+#Internal documentation
+#Possibly add a few more details?
+
+
 #The basics
 $date = Get-Date -Format g
 'Current User: ' + $env:UserName
