@@ -1,23 +1,25 @@
 ﻿cls
+
 #The basics
 $date = Get-Date -Format g
 'Current User: ' + $env:UserName
 "Today's Date: " + $date
 
-''
-''
+'' ; ''
 #information about the System
 'System'
 $system = Get-WMIObject -Class Win32_ComputerSystem
+$os = Get-CimInstance -Class Win32_OperatingSystem
 'Manufacturer: ' + $system.Manufacturer
 'Model: ' + $system.Model
 'Name: ' + $system.Name
+'OS: ' + $os.Caption
+'Serial Number: ' + $os.SerialNumber
+'Architecture: ' + $os.osarchitecture
 'Domain: ' + $system.Domain
 'Memory: ' + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
 
-
-''
-''
+'' ; ''
 #BIOS information
 'BIOS'
 $bios = Get-WmiObject -Class Win32_BIOS
@@ -25,9 +27,7 @@ $bios = Get-WmiObject -Class Win32_BIOS
 'Manufacturer: ' + $bios.Manufacturer
 'BIOS Version: ' + $bios.SMBIOSBIOSVersion
 
-
-''
-''
+'' ; ''
 #CPU specifications
 'Processor'
 $network = ($cpu = Get-WMIObject -Class Win32_Processor)
@@ -39,24 +39,6 @@ foreach ($_ in $cpu) {
     ''
 }
 
-
-''
-#Information about Logical Drives (Includes mapped drives and I believe PSDrives)
-'Storage'
-#Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
-$storage = (Get-WmiObject -Class Win32_logicaldisk)
-foreach ($_ in $storage) {
-    'Label: ' + $_.DeviceID
-    if ($_.VolumeName -ne '') {
-       'Name: ' + $_.VolumeName
-    }
-    'Capacity: ' + [math]::Round($_.Size / 1GB,2) + 'GB'
-    'Used: ' + [math]::Round(($_.Size - $_.FreeSpace) / 1GB,2) + 'GB'
-    'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
-    ''
-}
-
-
 ''
 #Network configuration details
 'Network'
@@ -66,3 +48,21 @@ foreach ($_ in $network) {
     'IP Address: ' + $_.IPAddress
     ''
 }
+
+''
+#Information about Logical Drives (Includes mapped drives and I believe PSDrives)
+'Storage'
+#Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
+$storage = (Get-WmiObject -Class Win32_logicaldisk)
+foreach ($_ in $storage) {
+    'Label: ' + $_.DeviceID + '\'
+    if ($_.VolumeName -ne '') {
+       'Name: ' + $_.VolumeName
+    }
+    'Capacity: ' + [math]::Round($_.Size / 1GB,2) + 'GB'
+    'Used: ' + [math]::Round(($_.Size - $_.FreeSpace) / 1GB,2) + 'GB'
+    'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
+    ''
+}
+
+pause
