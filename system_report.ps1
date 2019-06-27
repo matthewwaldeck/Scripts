@@ -29,10 +29,4 @@ $cpu = Get-WMIObject -Class Win32_Processor
 ''
 #Information about Logical Drives (Includes mapped drives and I believe PSDrives)
 'Storage'
-Get-WMIObject -Class Win32_LogicalDisk
-#$storage = Get-WMIObject -Class Win32_LogicalDisk
-#'Name: ' + $storage.VolumeName
-#'Drive: ' + $storage.DeviceID
-#'Capacity: ' + $storage.Size
-#'Available: ' + $storage.FreeSpace
-#'Network Location: ' + $storage.ProviderName
+Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
