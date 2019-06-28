@@ -1,10 +1,14 @@
-﻿##################################################
-# INTRO
-# This little script generates a text file
-# containing a list of all software installed
-# on the current computer, as well as some
-# basic information about each item.
-##################################################
+﻿<#
+
+    DESCRIPTION
+    Developer:  Matt Waldeck
+    Date:       06-28-2019
+    Language:   PowerShell
+    Purpose:    Lists all installed software and their information.
+    Last Edit:  06-28-2019
+    Version:    v1.0.0
+
+#>
 
 Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
 Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |

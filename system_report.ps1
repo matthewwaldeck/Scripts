@@ -1,14 +1,14 @@
-﻿##################################################
-# INTRO
-# This script gives you a really basic overview
-# of your system. The idea of this is to
-# speed up basic diagnostics, and make
-# troubleshooting a little bit easier.
-##################################################
-# TO-DO
-# -Log files
-# -Documentation
-##################################################
+﻿<#
+
+    DESCRIPTION
+    Developer:  Matt Waldeck
+    Date:       06-27-2019
+    Language:   PowerShell
+    Purpose:    Lists basic system info.
+    Last Edit:  06-28-2019
+    Version:    v2.1.0
+
+#>
 
 #Getting some information
 $date = Get-Date -Format g
