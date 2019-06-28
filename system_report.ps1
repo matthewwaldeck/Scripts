@@ -1,62 +1,51 @@
-﻿cls
+﻿##################################################
+# INTRO
+# This script gives you a really basic overview
+# of your system. The idea of this is to
+# speed up basic diagnostics, and make
+# troubleshooting a little bit easier.
+##################################################
+# TO-DO
+# -Log files
+# -Documentation
+##################################################
 
-#INTRO
-#This little script gives you a really basic overview of your system.
-#The idea of this is to speed up basic diagnostics.
-
-#TO-DO
-#Figure out a more elegant solution to writing log files
-#Final touches on formatting
-#Internal documentation
-#Possibly add a few more details?
-
-
-#The basics
+#Getting some information
 $date = Get-Date -Format g
-'Current User: ' + $env:UserName
-"Today's Date: " + $date
-
-'' ; ''
-#information about the System
-'System'
 $system = Get-WMIObject -Class Win32_ComputerSystem
 $os = Get-CimInstance -Class Win32_OperatingSystem
+$bios = Get-WmiObject -Class Win32_BIOS
+$cpu = Get-WMIObject -Class Win32_Processor
+$network = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=TRUE)
+$storage = (Get-WmiObject -Class Win32_logicaldisk)
+
+#information about the System
+'System'
+'Name: ' + $system.Name
+"Today's Date: " + $date
+'Current User: ' + $env:UserName
 'Manufacturer: ' + $system.Manufacturer
 'Model: ' + $system.Model
-'Name: ' + $system.Name
 'OS: ' + $os.Caption
 'Serial Number: ' + $os.SerialNumber
 'Architecture: ' + $os.osarchitecture
 'Domain: ' + $system.Domain
+'BIOS Manufacturer: ' + $bios.Manufacturer
+'BIOS Version: ' + $bios.Version
 'Memory: ' + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
-
-'' ; ''
-#BIOS information
-'BIOS'
-$bios = Get-WmiObject -Class Win32_BIOS
-'Computer Name: ' + $bios.PSComputerName
-'Manufacturer: ' + $bios.Manufacturer
-'BIOS Version: ' + $bios.SMBIOSBIOSVersion
-
-'' ; ''
-#CPU specifications
-'Processor'
-$network = ($cpu = Get-WMIObject -Class Win32_Processor)
 foreach ($_ in $cpu) {
     'Number: ' + $cpu.DeviceID
-    'Manufacturer: ' + $cpu.Manufacturer
     'Model: ' + $cpu.Name
-    'Speed: ' + $cpu.MaxClockSpeed
-    ''
-}
+    }
 
 ''
 #Network configuration details
 'Network'
-$network = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=TRUE)
 foreach ($_ in $network) {
     'Name: ' + $_.Description
     'IP Address: ' + $_.IPAddress
+    'Gateway: ' + $_.DefaultIPGateway
+    'DHCP?: ' + $_.DHCPEnabled
     ''
 }
 
@@ -64,7 +53,6 @@ foreach ($_ in $network) {
 #Information about Logical Drives (Includes mapped drives and I believe PSDrives)
 'Storage'
 #Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
-$storage = (Get-WmiObject -Class Win32_logicaldisk)
 foreach ($_ in $storage) {
     'Label: ' + $_.DeviceID + '\'
     if ($_.VolumeName -ne '') {
