@@ -73,7 +73,6 @@ function RunSFCScan {
 }
 
 function CleanupTemp {
-  # Needs to check for the existence of a temp directory!
   # Cleans up C:\Temp files if the last write time is older than 1 year.
   $TempDir = "$env:SystemDrive\Temp\"
   if (Test-Path $TempDir) {
