@@ -1,11 +1,11 @@
 <#
     DESCRIPTION
-    Developer:  Matt Waldeck
+    Developer:  Mike Rotec/Matt Waldeck
     Date:       06-28-2019
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for Workstations.
     Last Edit:  07-02-2019
-    Version:    v1.0.0
+    Version:    v1.1.0
 
     Tasks:
       -Clean up temp files
@@ -21,8 +21,8 @@
 #Variables
 $LastBootUp = Get-CimInstance -Class Win32_OperatingSystem | Select-Object LastBootUpTime
 $LastBootUp = (Get-Date) - $LastBootUp.LastBootUpTime | Select-Object Days -ExpandProperty Days
-$OldDisk = Get-WmiObject -Class win32_logicaldisk | Select-Object Size,FreeSpace
-$OldDisk = ($OldDisk.Size - $OldDisk.FreeSpace)
+$TempDisk = Get-WmiObject -Class win32_logicaldisk
+$OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
 
 #Functions
 function Test-Administrator {
@@ -200,9 +200,9 @@ RunCheckDisk
 RunSFCScan
 #CheckForErrors
 
-$NewDisk = Get-WmiObject -Class win32_logicaldisk | Select-Object Size
-$NewDisk = ($OldDisk - $NewDisk) / 1GB,2
+$TempDisk = Get-WmiObject -Class win32_logicaldisk
+$NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
 
-"You have freed up $NewDisk on your C: drive."
+"You have freed up " + ($OldDisk-$NewDisk) + " GB on your C: drive." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 #ShutdownComputer
