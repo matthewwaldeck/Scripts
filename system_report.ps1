@@ -6,7 +6,7 @@
     Language:   PowerShell
     Purpose:    Lists basic system info.
     Last Edit:  06-28-2019
-    Version:    v2.1.0
+    Version:    v1.0.0
 
 #>
 

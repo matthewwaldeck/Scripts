@@ -1,4 +1,14 @@
-﻿#Directory to be scanned.
+﻿<#
+    DESCRIPTION
+    Developer:  Matt Waldeck
+    Date:       06-28-2019
+    Language:   PowerShell
+    Purpose:    Renames large amounts of files. Not yet tested.
+    Last Edit:  07-02-2019
+    Version:    v0.1.0
+#>
+
+#Directory to be scanned.
 cd #DIRECTORY
 
 #This will pipe all the files in your current directory
