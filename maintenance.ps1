@@ -21,6 +21,8 @@
 #Variables
 $LastBootUp = Get-CimInstance -Class Win32_OperatingSystem | Select-Object LastBootUpTime
 $LastBootUp = (Get-Date) - $LastBootUp.LastBootUpTime | Select-Object Days -ExpandProperty Days
+$OldDisk = Get-WmiObject -Class win32_logicaldisk | Select-Object Size,FreeSpace
+$OldDisk = ($OldDisk.Size - $OldDisk.FreeSpace)
 
 #Functions
 function Test-Administrator {
@@ -198,5 +200,9 @@ RunCheckDisk
 RunSFCScan
 #CheckForErrors
 
+$NewDisk = Get-WmiObject -Class win32_logicaldisk | Select-Object Size
+$NewDisk = ($OldDisk - $NewDisk) / 1GB,2
+
+"You have freed up $NewDisk on your C: drive."
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 #ShutdownComputer
