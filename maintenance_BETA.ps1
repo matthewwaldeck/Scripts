@@ -64,28 +64,34 @@ function RunSFCScan {
 }
 
 function CleanupTemp {
+  # Needs to check for the existence of a temp directory!
   # Cleans up C:\Temp files if the last write time is older than 1 year.
   $TempDir = "$env:SystemDrive\Temp\"
-  "Cleaning up temp files in $TempDir..." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-  $GetTempDir = Get-ChildItem $TempDir -Recurse | Where-Object {$PSItem.LastWriteTime -lt (Get-Date).AddYears(-1)}
-  foreach ($Item in $GetTempDir) {
-      try {
-          "Removing $Item.Name from $TempDir." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-          Remove-Item $Item.FullName -Force -ErrorAction Stop
-      }
-      catch {
-          "Failed to remove $Item" | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-      }
+  if (Test-Path $TempDir) {
+    "Cleaning up temp files in $TempDir..." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
+    $GetTempDir = Get-ChildItem $TempDir -Recurse | Where-Object {$PSItem.LastWriteTime -lt (Get-Date).AddYears(-1)}
+    foreach ($Item in $GetTempDir) {
+        try {
+            "Removing $Item.Name from $TempDir." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
+            Remove-Item $Item.FullName -Force -ErrorAction Stop
+        }
+        catch {
+            "Failed to remove $Item" | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
+        }
+    }
+    try {
+        $GetTempDir = Get-ChildItem $TempDir -Recurse | Where-Object {$PSItem.LastWriteTime -lt (Get-Date).AddYears(-1)}; $GetTempDir = $GetTempDir.Count
+    }
+    catch {
+        "No files in $TempDir meet criteria." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
+    }
+    if ($GetTempDir -gt 0) {
+        "There are $GetTempDir files remaining in $TempDir." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
+    }
+  } else {
+    "There is no temp file present!"
   }
-  try {
-      $GetTempDir = Get-ChildItem $TempDir -Recurse | Where-Object {$PSItem.LastWriteTime -lt (Get-Date).AddYears(-1)}; $GetTempDir = $GetTempDir.Count
-  }
-  catch {
-      "No files in $TempDir meet criteria." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-  }
-  if ($GetTempDir -gt 0) {
-      "There are $GetTempDir files remaining in $TempDir." | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-  }
+  Clear-Variable TempDir
 }
 
 function CleanupWinTemp {
@@ -189,6 +195,6 @@ CleanupAppDataTemp
 EmptyRecycleBin
 CheckForErrors
 "Maintenance completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\Matt.waldeck\Desktop\maintenance.log
-ShutdownComputer
+#ShutdownComputer
 
 Pause
