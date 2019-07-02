@@ -18,7 +18,8 @@
 #>
 
 #Variables
-
+$LastBootUp = Get-CimInstance -Class Win32_OperatingSystem | Select-Object LastBootUpTime
+$LastBootUp = (Get-Date) - $LastBootUp.LastBootUpTime | Select-Object Days -ExpandProperty Days
 
 #Functions
 function Get-TimeStamp {
