@@ -4,7 +4,7 @@
     Date:       06-27-2019
     Language:   PowerShell
     Purpose:    Lists basic system info.
-    Last Edit:  06-28-2019
+    Last Edit:  07-03-2019
     Version:    v1.0.2
 #>
 
@@ -17,7 +17,7 @@ $cpu = Get-WMIObject -Class Win32_Processor
 $network = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=TRUE)
 $storage = (Get-WmiObject -Class Win32_logicaldisk)
 
-#information about the System
+#Information about the System
 'System'
 'Name: ' + $system.Name
 "Today's Date: " + $date
