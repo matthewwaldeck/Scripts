@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Lists basic system info.
     Last Edit:  06-28-2019
-    Version:    v1.0.1
+    Version:    v1.0.2
 #>
 
 #Getting some information
@@ -21,19 +21,23 @@ $storage = (Get-WmiObject -Class Win32_logicaldisk)
 'System'
 'Name: ' + $system.Name
 "Today's Date: " + $date
-'Current User: ' + $env:UserName
-'Manufacturer: ' + $system.Manufacturer
-'Model: ' + $system.Model
 'OS: ' + $os.Caption
 'Serial Number: ' + $os.SerialNumber
 'Architecture: ' + $os.osarchitecture
+'Current User: ' + $env:UserName
 'Domain: ' + $system.Domain
 'BIOS Manufacturer: ' + $bios.Manufacturer
 'BIOS Version: ' + $bios.Version
+
+''
+#Hardware details
+'Hardware'
+'Manufacturer: ' + $system.Manufacturer
+'Model: ' + $system.Model
 'Memory: ' + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
 foreach ($_ in $cpu) {
-    'Number: ' + $cpu.DeviceID
-    'Model: ' + $cpu.Name
+    'CPU Number: ' + $cpu.DeviceID
+    'CPU Model: ' + $cpu.Name
     }
 
 ''
@@ -61,3 +65,5 @@ foreach ($_ in $storage) {
     'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
     ''
 }
+
+Pause
