@@ -1,5 +1,4 @@
 ﻿<#
-
     DESCRIPTION
     Developer:  Matt Waldeck
     Date:       06-27-2019
@@ -7,7 +6,6 @@
     Purpose:    Lists basic system info.
     Last Edit:  06-28-2019
     Version:    v1.0.0
-
 #>
 
 #Getting some information
