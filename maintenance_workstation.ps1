@@ -3,7 +3,7 @@
     Developer:  Mike Rotec/Matt Waldeck
     Date:       06-18-2018
     Language:   PowerShell
-    Purpose:    Will perform routine maintenance tasks for Workstations.
+    Purpose:    Will perform routine maintenance tasks for workstations.
     Last Edit:  07-02-2019
     Version:    v1.1.2
 
@@ -17,7 +17,7 @@
     Note: Original code from the following link, has been modified to fit my needs.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
 
-    Do not run this file directly, use maintenance.bat to run with admin priviledges.
+    Do not run this file directly, use maintenance_workstation.bat to run with admin priviledges.
     This will ensure all features work properly.
 #>
 
