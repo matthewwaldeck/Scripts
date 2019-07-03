@@ -1,5 +1,5 @@
 # PowerShell_Scripts
-This collection of PowerShell scripts serves as a backup for myself, as well as a way to keep track of changes made over time. I try to make my scripts work in most environments if possible, but I make no promises.
+This collection of PowerShell scripts serves as a backup for myself, as well as a way to keep track of changes made over time. most of them should work in most environments, but I make no promises.
 
 **Use at your own risk**<br>
 
