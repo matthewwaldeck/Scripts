@@ -16,6 +16,9 @@
 
     Note: Original code from the following link, has been modified to fit my needs.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
+
+    Do not run this file directly, use maintenance.bat to run with admin priviledges.
+    This will ensure all features work properly.
 #>
 
 #Variables
@@ -151,6 +154,7 @@ function EmptyRecycleBin {
 
 function CheckForErrors {
   # Used for error checking once maintenance has completed.
+  #Still need to figure this part out...
   if ($LastBootUp -gt 8) {
       Send-MailMessage `
           -SmtpServer domain `
