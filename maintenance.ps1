@@ -5,14 +5,14 @@
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for Workstations.
     Last Edit:  07-02-2019
-    Version:    v1.1.0
+    Version:    v1.1.2
 
     Tasks:
       -Clean up temp files
       -Run Check Disk and report errors
       -Run SFC Scan and report errors
       -Log all results
-      -Shutdown computer
+      -Shutdown computer (If enabled)
 
     Note: Original code from the following link, has been modified to fit my needs.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
@@ -21,9 +21,7 @@
     This will ensure all features work properly.
 #>
 
-#Variables
-$LastBootUp = Get-CimInstance -Class Win32_OperatingSystem | Select-Object LastBootUpTime
-$LastBootUp = (Get-Date) - $LastBootUp.LastBootUpTime | Select-Object Days -ExpandProperty Days
+#Get pre-maintenance used disk space
 $TempDisk = Get-WmiObject -Class win32_logicaldisk
 $OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
 
@@ -45,12 +43,10 @@ function RunCheckDisk {
       $Output = chkdsk $Disk | Select-String 'Windows has scanned the file system and found no problems.'
       if ($Output.ToString() -eq 'Windows has scanned the file system and found no problems.') {
           "$(Get-TimeStamp) - Check Disk completed on $Disk drive successfully." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-          $Script:CheckDisk = 0
       }
       else {
           "$(Get-TimeStamp) - Check Disk has been scheduled to run on reboot on $Disk." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
           Write-Output 'y' | chkdsk $Disk /f
-          $Script:CheckDisk = 1
       }
   }
 }
@@ -152,29 +148,6 @@ function EmptyRecycleBin {
   }
 }
 
-function CheckForErrors {
-  # Used for error checking once maintenance has completed.
-  #Still need to figure this part out...
-  if ($LastBootUp -gt 8) {
-      Send-MailMessage `
-          -SmtpServer domain `
-          -To email `
-          -From email `
-          -Subject "Maintenance Alert on $env:COMPUTERNAME" `
-          -Body "Maintenance Alert - $env:COMPUTERNAME has not been shutdown in $LastBootUp days.
-Full logs can be found at $Log"
-  }   
-  if ($CheckDisk -eq 1) {
-      Send-MailMessage `
-          -SmtpServer domain `
-          -To email `
-          -From email `
-          -Subject "Maintenance Alert on $env:COMPUTERNAME" `
-          -Body "Maintenance Alert - Check disk error detected on $env:COMPUTERNAME.
-Full logs can be found at $Log."   
-  }
-}
-
 function ShutdownComputer {
   #Should be the last thing to run
   $Time = (Get-Date).ToString('yyyy-MM-dd hh:mm:ss tt')
@@ -201,8 +174,8 @@ EmptyRecycleBin
 OptimizeDrives
 RunCheckDisk
 RunSFCScan
-#CheckForErrors
 
+#Get post-maintenance used disk space
 $TempDisk = Get-WmiObject -Class win32_logicaldisk
 $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
 

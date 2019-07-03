@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Lists basic system info.
     Last Edit:  06-28-2019
-    Version:    v1.0.0
+    Version:    v1.0.1
 #>
 
 #Getting some information
@@ -61,5 +61,3 @@ foreach ($_ in $storage) {
     'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
     ''
 }
-
-pause
