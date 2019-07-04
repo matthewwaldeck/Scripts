@@ -79,8 +79,10 @@ function CheckDiskStatus {
             "$(Get-TimeStamp) - " + $_.DeviceID + "\ has $left% remaining." |`
             Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
         } else {
+            Write-Output "!!!!!!!!!!!!!!!!!!!!" | Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
             "$(Get-TimeStamp) - WARNING!" + $_.DeviceID + "\ has only $left% remaining free." |`
             Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
+            Write-Output "!!!!!!!!!!!!!!!!!!!!" | Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
         }
     }
     
