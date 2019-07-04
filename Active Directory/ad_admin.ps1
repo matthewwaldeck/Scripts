@@ -2,9 +2,9 @@
     Developer:  Matt Waldeck
     Date:       06-28-2019
     Language:   PowerShell
-    Purpose:    Lists all installed software and their information.
+    Purpose:    Launches AD with your domain administrator account, rather than your normal account.
     Last Edit:  07-04-2019
-    Version:    v1.0.2
+    Version:    v1.3.1
 #>
 
 <# SETUP - PLEASE READ BEFORE PANICKING
