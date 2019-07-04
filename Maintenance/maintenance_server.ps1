@@ -97,9 +97,9 @@ if (!(Test-Administrator)) {
   exit
 }
 
-#EmptyRecycleBin
-#RunCheckDisk
-#RunSFCScan
+EmptyRecycleBin
+RunCheckDisk
+RunSFCScan
 CheckDiskStatus
 
 "$(Get-TimeStamp) - Server Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
