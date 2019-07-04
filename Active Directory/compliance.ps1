@@ -4,7 +4,7 @@
     Language:   PowerShell
     Purpose:    Checks all AD users against compliance policy.
     Last Edit:  07-04-2019
-    Version:    v0.1.0 (Beta)
+    Version:    v0.1.0
 
     Checks:
         - Do passwords expire?
