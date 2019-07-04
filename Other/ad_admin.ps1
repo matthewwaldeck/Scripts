@@ -4,7 +4,7 @@
     Language:   PowerShell
     Purpose:    Lists all installed software and their information.
     Last Edit:  07-04-2019
-    Version:    v1.0.1
+    Version:    v1.0.2
 #>
 
 <# SETUP - PLEASE READ BEFORE PANICKING
@@ -14,22 +14,10 @@
         - Place this file wherever you like.
         - Run and login whenever you would like to use AD with your admin account.
         - Close the CMD window that appears with AD if you wish, it's just used to open the application.
+    
+    Once complete, modify the below code to generate your admin login from your normal account login.
+    Then you can plug in your domain and you should be good to go!
 #>
-
-<# IF YOU WANT TO DOUBLE-CLICK THE SCRIPT TO RUN
-    This is nice if you use the script very regularly.
-    You must set Windows to open .ps1 files with PowerShell by default.
-        - Right click on this file
-        - Select "Open With"
-        - Choose another app
-        - Select "More Options"
-        - Select "Choose another app on this PC"
-        - Check "Always use this app to open .ps1 files"
-        - Navigate to C:\Windows\System32\WindowsPowerShell\v1.0
-        - Select powershell (.exe if you have extensions turned on)
-#>
-
-# When the above steps are completed, modify the code below to generate your admin login, plug in your domain and you'll be good to go!
 
 # Seperate first and last name.
 $login = $env:USERNAME 
