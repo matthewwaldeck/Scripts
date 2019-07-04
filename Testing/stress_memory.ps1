@@ -4,6 +4,9 @@
     https://blogs.technet.microsoft.com/lukeb/2013/01/18/windows-beatup-windows-stress-memory-and-cpus/
 #>
 
+# Warning
+Write-Output "Warning: This may affect system performance."
+
 # RAM in box
 $box=get-WMIobject Win32_ComputerSystem
 $Global:physMB=$box.TotalPhysicalMemory / 1024 /1024
@@ -26,7 +29,8 @@ $Host.ui.rawui.WindowTitle = "$($Host.Name) | Processor: $cpu%, Memory: $ram MB"
 } | Out-Null
 $psTimer.start()
 
-# use up all available RAM
+# Begin test.
+Write-Output "Saturating RAM..."
 $a = "a" * 256MB
 $growArray = @()
 $growArray += $a
@@ -37,8 +41,9 @@ $ram = $physMB - $psPerfMEM.NextValue()
 $MAXRAM=$physMB - $HEADROOM
 $k=0
 while ($ram -lt $MAXRAM) {
-$bigArray += ,@($k,$growArray)
-$k += 1
-$growArray += $a
-$ram = $physMB - $psPerfMEM.NextValue()
+    $bigArray += ,@($k,$growArray)
+    $k += 1
+    $growArray += $a
+    $ram = $physMB - $psPerfMEM.NextValue()
 }
+Write-Output "Done."

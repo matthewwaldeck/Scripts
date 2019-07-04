@@ -2,18 +2,18 @@
     Developer:  Matt Waldeck
     Date:       07-04-2019
     Language:   PowerShell
-    Purpose:    Runs CPU at around 50-60% using basic math jobs.
+    Purpose:    Runs CPU at around 35% using basic math jobs.
                 Honestly I'm just cold but don't want to slow down my machine.
                 See stress_cpu.ps1 for the actuall stress test.
     Last Edit:  07-04-2019
-    Version:    v1.0.0
+    Version:    v1.0.1
 #>
 
-$coreCount = (Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors) /2
-
+# Warning
 Write-Output "Warning: This may affect system performance."
-Write-Output "Running on $coreCount threads..."
 
+$coreCount = (Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors) /4
+Write-Output "Running jobs on $coreCount threads..."
 # For each item in $coureCount, start a job.
 foreach ($_ in 1..$coreCount){
     Start-Job -ScriptBlock{
