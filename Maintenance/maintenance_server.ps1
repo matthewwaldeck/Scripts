@@ -8,9 +8,10 @@
     Version:    v1.0.0
 
     Tasks:
-      -Run Check Disk and report errors
-      -Run SFC Scan and report errors
-      -Log all results
+        -Check capacity of all storage devices.
+        -Run Check Disk and report errors
+        -Run SFC Scan and report errors
+        -Log all results
 
     Note: Original code from the following link, has been modified to fit my needs.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/ServerMaintenance.ps1
@@ -68,6 +69,23 @@ function EmptyRecycleBin {
     }
 }
 
+function CheckDiskStatus {
+    $storage = (Get-WmiObject -Class Win32_logicaldisk)
+    foreach ($_ in $storage) {
+        $free = $_.FreeSpace
+        $left = ($free / $_.Size) * 100
+        $left = [math]::Round($left)
+        if ($left -gt "10") {
+            "$(Get-TimeStamp) - " + $_.DeviceID + "\ has $left% remaining." |`
+            Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
+        } else {
+            "$(Get-TimeStamp) - WARNING!" + $_.DeviceID + "\ has only $left% remaining free." |`
+            Add-Content C:\Users\$env:UserName\Desktop\maintenance.log
+        }
+    }
+    
+}
+
 
 #Script
 "$(Get-TimeStamp) - Server Maintenance started by $env:UserName" | Set-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
@@ -77,8 +95,9 @@ if (!(Test-Administrator)) {
   exit
 }
 
-EmptyRecycleBin
-RunCheckDisk
-RunSFCScan
+#EmptyRecycleBin
+#RunCheckDisk
+#RunSFCScan
+CheckDiskStatus
 
 "$(Get-TimeStamp) - Server Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
