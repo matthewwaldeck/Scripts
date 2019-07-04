@@ -14,6 +14,14 @@
         - Place this file wherever you like.
         - Run and login whenever you would like to use AD with your admin account.
         - Close the CMD window that appears with AD if you wish, it's just used to open the application.
+
+    Once you have done this, set Windows to run .ps1 files with PowerShell by default
+        - Right-click on the script
+        - Select "Open with"
+        - Choose another app
+        - Navigate to C:\WINDOWS\System32\Windows PowerShell\v1.0\
+        - Select PowerShell.exe
+        - Check "Always run with..."
     
     Once complete, modify the below code to generate your admin login from your normal account login.
     Then you can plug in your domain and you should be good to go!
