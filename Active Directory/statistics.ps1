@@ -19,6 +19,10 @@ $disabledUsers = Get-ADUser {-Filter enabled -eq $false}
 
 
 ### Functions ###
+function Get-TimeStamp {
+    return "{0:MM/dd/yy} at {0:HH:mm:ss}" -f (Get-Date)
+}
+
 # Gets number of enabled user accounts
 function GetEnabledUsers {
     foreach ($_ in $enabledUsers) {
@@ -35,9 +39,10 @@ function GetDisabledUsers {
 
 
 ### Script ###
-# Still need to code some output.
-# Ideally will put a text file in the current user's Documents folder I think.
-# Once I get a test environment set up I can see if this even works.
-# That sounds like a project for tomorrow...
-GetEnabledUsers
-GetDisabledUsers
+"User: $env:USERNAME" | Set-Content C:\Users\$env:UserName\Desktop\Domain_Stats.log
+"Time: $(Get-Timestamp)" | Add-Content C:\Users\$env:UserName\Desktop\Domain_Stats.log
+"Domain: " + $domain | Add-Content C:\Users\$env:UserName\Desktop\Domain_Stats.log
+GetEnabledUsers | Add-Content C:\Users\$env:UserName\Desktop\Domain_Stats.log
+GetDisabledUsers | Add-Content C:\Users\$env:UserName\Desktop\Domain_Stats.log
+
+pause

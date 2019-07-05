@@ -20,7 +20,7 @@ Import-Module ActiveDirectory
 function passwords {
     Get-ADUser -Filter {PasswordNeverExpires -eq $true -and enabled -eq $true} -Properties PasswordNeverExpires, PasswordLastSet |`
         Select-Object Name, PasswordLastSet, PasswordNeverExpires |`
-        Sort-Object Name | Export-Csv -Path "$env:USERPROFILE\Documents\compliance.csv" -NoTypeInformation -Force
+        Sort-Object Name | Export-Csv -Path "$env:USERPROFILE\Documents\compliance.csv"
 }
 
 # Add a blank line to the CSV file.
@@ -33,10 +33,12 @@ function audit_ghosts {
     # Builds the CSV for old users.
     Get-ADUser -Filter {LastLogonTimeStamp -lt $Date -and enabled -eq $true} -Properties LastLogonTimeStamp |`
         Select-Object DisplayName, @{Name = "Time Stamp"; Expression = {[DateTime]::FromFileTime($_.LastLogonTimeStamp).ToString('yyyy-MM-dd_hh:mm:ss')}} |`
-        Sort-Object "Time Stamp" | Add-Content -Path "$env:USERPROFILE\Documents\compliance.csv" -NoTypeInformation -Force
+        Sort-Object "Time Stamp" | Add-Content -Path "$env:USERPROFILE\Documents\compliance.csv"
 }
 
 
 # Run the functions
 passwords
 audit_ghosts
+
+pause
