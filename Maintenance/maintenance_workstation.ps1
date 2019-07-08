@@ -167,6 +167,12 @@ if (!(Test-Administrator)) {
   exit
 }
 
+"Would you like to shut down your PC? (y/n)"
+$shutdown = 0
+if (Read-Host == 'y') {
+  $shutdown = 1
+}
+
 CleanupTemp
 CleanupWinTemp
 CleanupAppDataTemp
@@ -181,7 +187,7 @@ $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 
 "You have freed up " + ($OldDisk-$NewDisk) + " GB on your C: drive." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-"Would you like to shut down your PC? (y/n)"
-if (Read-Host == "y") {
+if ($shutdown == 1) {
+  "Shutting down workstation..." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   ShutdownComputer
 }
