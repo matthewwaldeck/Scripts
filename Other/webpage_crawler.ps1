@@ -50,5 +50,5 @@ function Get-WebSubPage
     $Global:CheckedPages+=$Page
 }
  
-Get-WebSubPage -BaseURL:"https://www.apple.com" -SubLink:"/ca" -CurrentDepth:1 -Verbose
+Get-WebSubPage -BaseURL:"https://www.ifixit.com/" -SubLink:"/" -CurrentDepth:1 -Verbose
 Pause
