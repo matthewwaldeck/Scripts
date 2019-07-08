@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for servers.
-    Last Edit:  07-02-2019
-    Version:    v1.0.0
+    Last Edit:  07-08-2019
+    Version:    v1.0.1
 
     Tasks:
         -Check capacity of all storage devices.
@@ -52,7 +52,8 @@ function RunSFCScan {
     if ($LASTEXITCODE -eq 1) {
         "$(Get-TimeStamp) - Failed to run SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
     }
-    else {"$(Get-TimeStamp) - Completed SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log}
+    else {
+        "$(Get-TimeStamp) - Completed SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log}
 }
 
 function EmptyRecycleBin {
@@ -93,7 +94,7 @@ function CheckDiskStatus {
 "$(Get-TimeStamp) - Server Maintenance started by $env:UserName" | Set-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 if (!(Test-Administrator)) {
   "$(Get-TimeStamp) - Script must be run as administrator. Exiting script." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-  "$(Get-TimeStamp) - Server Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
+  "$(Get-TimeStamp) - Server Maintenance failed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   exit
 }
 
