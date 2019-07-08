@@ -4,15 +4,15 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  07-02-2019
-    Version:    v1.1.2
+    Last Edit:  07-08-2019
+    Version:    v1.2.0
 
     Tasks:
       -Clean up temp files
       -Run Check Disk and report errors
       -Run SFC Scan and report errors
       -Log all results
-      -Shutdown computer (If enabled)
+      -Shutdown computer (If requested)
 
     Note: Original code from the following link, has been modified to fit my needs.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
@@ -27,6 +27,7 @@ $OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 
 #Functions
 function Test-Administrator {
+  "Testing for admin priviledges..."
   $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
   $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
@@ -37,6 +38,7 @@ function Get-TimeStamp {
 
 function RunCheckDisk {
   # Get all disks and run chkdsk on them and log the output
+  "Running CheckDisk..."
   $Disks = Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
   foreach ($Disk in $Disks) {
       "$(Get-TimeStamp) - Check disk on $Disk started." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
@@ -52,6 +54,7 @@ function RunCheckDisk {
 }
 
 function OptimizeDrives {
+  "Optimizing and Defragging drives..."
   "$(Get-TimeStamp) - Beginning defrag on disks..." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   $Disks=Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
   ForEach ($Disk in $Disks) {
@@ -63,16 +66,19 @@ function OptimizeDrives {
 
 function RunSFCScan {
   # Run sfcscan /scannow
+  "Running SFC scan..."
   "$(Get-TimeStamp) - Started SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   sfc /ScanNow | Out-Null
   if ($LASTEXITCODE -eq 1) {
       "$(Get-TimeStamp) - Failed to run SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   }
-  else {"$(Get-TimeStamp) - Completed SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log}
+  else {
+    "$(Get-TimeStamp) - Completed SFC scan." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log}
 }
 
 function CleanupTemp {
   # Cleans up C:\Temp files if the last write time is older than 1 year.
+  "Cleaning up temp folder (if present)..."
   $TempDir = "$env:SystemDrive\Temp\"
   if (Test-Path $TempDir) {
     "$(Get-TimeStamp) - Cleaning up temp files in $TempDir..." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
@@ -103,6 +109,7 @@ function CleanupTemp {
 
 function CleanupWinTemp {
   # Clean up the windows Temp folder
+  "Cleaning up Windows temp folder..."
   $TempDir = $env:windir + '\Temp\'
   try {
       "$(Get-TimeStamp) - Cleaning up temp files in $TempDir..." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
@@ -117,6 +124,7 @@ function CleanupWinTemp {
 }
 
 function CleanupAppDataTemp {
+  "Cleaning up AppData temp folder..."
   # Cleans up local AppData Temp folder
   $TempDir = Get-ChildItem C:\Users -Exclude 'Public*', 'default*', '*ldap*', '*admin*', '*test*' | Select-Object FullName -ExpandProperty FullName
   foreach ($Dir in $TempDir) {
@@ -136,6 +144,7 @@ function CleanupAppDataTemp {
 
 function EmptyRecycleBin {
   # Empties the recycle bin
+  "Emptying the Recyle Bin..."
   try {
     $NewShell = New-Object -ComObject Shell.Application -ErrorAction Stop
     $GetRecycleBin = $NewShell.NameSpace(0xA)
@@ -163,13 +172,13 @@ function ShutdownComputer {
 
 if (!(Test-Administrator)) {
   "$(Get-TimeStamp) - Script must be run as administrator. Exiting script." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-  "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
+  "$(Get-TimeStamp) - Maintenance failed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   exit
 }
 
 "Would you like to shut down your PC? (y/n)"
 $shutdown = 0
-if (Read-Host == 'y') {
+if (Read-Host -eq 'y') {
   $shutdown = 1
 }
 
@@ -187,7 +196,8 @@ $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 
 "You have freed up " + ($OldDisk-$NewDisk) + " GB on your C: drive." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-if ($shutdown == 1) {
-  "Shutting down workstation..." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
+"$(Get-TimeStamp) - Shutdown = $shutdown"
+if ($shutdown -eq 1) {
+  "$(Get-TimeStamp) - Shutting down workstation in 30 minutes." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   ShutdownComputer
 }
