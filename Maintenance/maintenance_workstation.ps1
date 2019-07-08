@@ -181,4 +181,7 @@ $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 
 "You have freed up " + ($OldDisk-$NewDisk) + " GB on your C: drive." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
-#ShutdownComputer
+"Would you like to shut down your PC? (y/n)"
+if (Read-Host == "y") {
+  ShutdownComputer
+}
