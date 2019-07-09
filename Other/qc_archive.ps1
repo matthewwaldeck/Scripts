@@ -3,11 +3,13 @@
     Developer:  Matt Waldeck
     Date:       07-08-2018
     Language:   PowerShell
-    Purpose:    Generates an offline archive of all Questionable Content comics.
-                For regular viewing please go to the website as it supports the artist,
-                this only exists in case the site goes down.
-    Last Edit:  07-08-2019
-    Version:    v1.0.0
+    Purpose:    Downloads an offline archive of all Questionable Content comics.
+    Last Edit:  07-09-2019
+    Version:    v1.0.1
+
+    NOTE:
+        For regular viewing please go to the website as it supports the artist,
+        this only exists in case the site goes down.
 #>
 
 $count = 1
