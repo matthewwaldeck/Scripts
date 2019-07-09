@@ -12,11 +12,11 @@
         this only exists to create an offline backup in case the site goes down.
 #>
 
-# update $last to match the number of the last comic uploaded.
+# Update $last to match the number of the last comic uploaded.
 $count = 1
 $last = 4041 + 1
 
-#Questionable Content
+# Questionable Content
 while ($count -lt $last) {
     $url = "https://questionablecontent.net/comics/$count.png"
     Invoke-WebRequest $url -OutFile C:\Users\$env:USERNAME\Documents\questionable_content\$count.png
