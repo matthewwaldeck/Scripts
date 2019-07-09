@@ -9,9 +9,10 @@
 
     NOTE:
         For regular viewing please go to the website as it supports the artist,
-        this only exists in case the site goes down.
+        this only exists to create an offline backup in case the site goes down.
 #>
 
+# update $last to match the number of the last comic uploaded.
 $count = 1
 $last = 4041 + 1
 
@@ -22,5 +23,6 @@ while ($count -lt $last) {
     $count=$count+1
 }
 
-Write-Output "QC Archive is up to date!"
+# Lets you know it's finished downloading.
+Write-Output "Successfully downloaded QC archive!"
 Pause
