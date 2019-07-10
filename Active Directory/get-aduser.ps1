@@ -3,9 +3,9 @@
     Developer:  Matt Waldeck
     Date:       07-09-2018
     Language:   PowerShell
-    Purpose:    Lists all users in the current domain.
+    Purpose:    Generates a CSV containing all users in the current domain.
     Last Edit:  07-09-2019
-    Version:    v1.1.1
+    Version:    v1.1.2
 #>
 
 # Allow AD commands
