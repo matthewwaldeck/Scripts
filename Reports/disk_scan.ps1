@@ -7,6 +7,7 @@
 # appended to the txt file generated during the initial scan.
 #
 # Author: Rob Willis 6/15/2016
+# Link: http://robwillis.info/2014/07/powershell-script-find-the-25-largest-files-and-list-folder-sizes-for-any-drive/
 #
 ######################################################################
  
