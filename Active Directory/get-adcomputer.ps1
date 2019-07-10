@@ -11,7 +11,13 @@
 # Allow AD commands
 Import-Module ActiveDirectory
 
+# Console feedback
 Write-Output "Generating C:\adcomputers.csv..."
-Get-ADComputer -Filter * | Select-Object -Property Name, ObjectClass, Enabled, DistinguishedName | Export-Csv C:\adcomputers.csv
+
+# Select all computers in the domain and pick out the specified information
+Get-ADComputer -Filter * | Select-Object -Property Name, ObjectClass, Enabled, DistinguishedName |`
+Export-Csv C:\adcomputers.csv #Export to root of C:\
+
+# Console feedback
 Write-Output "Done!"
 Write-Output ""
