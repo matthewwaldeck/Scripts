@@ -16,8 +16,10 @@ $lastName = $login.Substring($pos+1)
 # Format to admin login. Change this part to whatever format used in your environment. This is an example.
 $adLogin = $firstName + $lastName.Substring(0,1) + '.admin'
 
-# Functions, but does not generate username automatically yet.
-Start-Process -FilePath 'C:\Program Files (x86)\Citrix\Citrix Delivery Services Console\Framework\CmiLaunch.exe' -Verb RunAsUser
+# Moves to the file location, and opens the login dialogue.
+# Done in two steps for more readable code.
+Set-Location 'C:\Program Files (x86)\Citrix\Citrix Delivery Services Console\Framework'
+Start-Process ".\CmiLaunch.exe" #-Credential "CIG\$adLogin"
 
 # For testing, comment above line and uncomment block below.
 <#
