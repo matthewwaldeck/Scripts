@@ -4,7 +4,7 @@
     Language:   PowerShell
     Purpose:    Launches Citrix AppCenter with your domain administrator account, rather than your normal account.
     Last Edit:  07-11-2019
-    Version:    v1.0.0
+    Version:    v1.1.0
 #>
 
 # Seperate first and last name.
@@ -17,9 +17,10 @@ $lastName = $login.Substring($pos+1)
 $adLogin = $firstName + $lastName.Substring(0,1) + '.admin'
 
 # Moves to the file location, and opens the login dialogue.
-# Done in two steps for more readable code.
+# Done in two steps literally because PowerShell gets mad if I don't.
+# Change DOMAIN below to your domain name.
 Set-Location 'C:\Program Files (x86)\Citrix\Citrix Delivery Services Console\Framework'
-Start-Process ".\CmiLaunch.exe" #-Credential "CIG\$adLogin"
+Start-Process powershell.exe -Credential "DOMAIN\$adLogin" -NoNewWindow -ArgumentList "Start-Process .\CmiLaunch.exe -Verb runAs"
 
 # For testing, comment above line and uncomment block below.
 <#
