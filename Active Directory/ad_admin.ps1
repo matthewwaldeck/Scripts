@@ -3,7 +3,7 @@
     Date:       06-28-2019
     Language:   PowerShell
     Purpose:    Launches AD with your domain administrator account, rather than your normal account.
-    Last Edit:  07-04-2019
+    Last Edit:  07-12-2019
     Version:    v1.3.3
 #>
 

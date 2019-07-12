@@ -3,7 +3,7 @@
     Date:       07-11-2019
     Language:   PowerShell
     Purpose:    Launches Citrix AppCenter with your domain administrator account, rather than your normal account.
-    Last Edit:  07-11-2019
+    Last Edit:  07-12-2019
     Version:    v1.1.0
 #>
 
