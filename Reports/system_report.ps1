@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Lists basic system info.
     Last Edit:  07-03-2019
-    Version:    v1.0.2
+    Version:    v1.1.0
 #>
 
 #Getting some information
@@ -17,53 +17,71 @@ $cpu = Get-WMIObject -Class Win32_Processor
 $network = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=TRUE)
 $storage = (Get-WmiObject -Class Win32_logicaldisk)
 
+function intro {
+    "System report requested by $env:USERNAME on $date."
+    ''
+}
+
 #Information about the System
-'System'
-'Name: ' + $system.Name
-"Today's Date: " + $date
-'OS: ' + $os.Caption
-'Serial Number: ' + $os.SerialNumber
-'Architecture: ' + $os.osarchitecture
-'Current User: ' + $env:UserName
-'Domain: ' + $system.Domain
-'BIOS Manufacturer: ' + $bios.Manufacturer
-'BIOS Version: ' + $bios.Version
+function system {
+    'System'
+    'Name: ' + $system.Name
+    'OS: ' + $os.Caption
+    'Serial Number: ' + $os.SerialNumber
+    'Architecture: ' + $os.osarchitecture
+    'Domain: ' + $system.Domain
+    'BIOS Manufacturer: ' + $bios.Manufacturer
+    'BIOS Version: ' + $bios.Version
+    ''
+}
 
-''
 #Hardware details
-'Hardware'
-'Manufacturer: ' + $system.Manufacturer
-'Model: ' + $system.Model
-'Memory: ' + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
-foreach ($_ in $cpu) {
-    'CPU Number: ' + $cpu.DeviceID
-    'CPU Model: ' + $cpu.Name
+function hardware {
+    'Hardware'
+    'Manufacturer: ' + $system.Manufacturer
+    'Model: ' + $system.Model
+    'Memory: ' + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
+    foreach ($_ in $cpu) {
+        'CPU Number: ' + $cpu.DeviceID
+        'CPU Model: ' + $cpu.Name
     }
+    ''
+}
 
-''
 #Network configuration details
-'Network'
-foreach ($_ in $network) {
-    'Name: ' + $_.Description
-    'IP Address: ' + $_.IPAddress
-    'Gateway: ' + $_.DefaultIPGateway
-    'DHCP?: ' + $_.DHCPEnabled
-    ''
-}
-
-''
-#Information about Logical Drives (Includes mapped drives and I believe PSDrives)
-'Storage'
-#Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
-foreach ($_ in $storage) {
-    'Label: ' + $_.DeviceID + '\'
-    if ($_.VolumeName -ne '') {
-       'Name: ' + $_.VolumeName
+function network {
+    'Network'
+    foreach ($_ in $network) {
+        'Name: ' + $_.Description
+        'IP Address: ' + $_.IPAddress
+        'Gateway: ' + $_.DefaultIPGateway
+        'DHCP Enabled?: ' + $_.DHCPEnabled
+        ''
     }
-    'Capacity: ' + [math]::Round($_.Size / 1GB,2) + 'GB'
-    'Used: ' + [math]::Round(($_.Size - $_.FreeSpace) / 1GB,2) + 'GB'
-    'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
     ''
 }
 
-Pause
+#Information about Logical Drives
+function storage {
+    'Storage'
+    #Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
+    foreach ($_ in $storage) {
+        'Label: ' + $_.DeviceID + '\'
+        if ($_.VolumeName -ne '') {
+        'Name: ' + $_.VolumeName
+        }
+        'Capacity: ' + [math]::Round($_.Size / 1GB,2) + 'GB'
+        'Used: ' + [math]::Round(($_.Size - $_.FreeSpace) / 1GB,2) + 'GB'
+        'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
+        ''
+    }
+}
+
+
+### Script ###
+intro | Set-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+system | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+hardware | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+network | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+storage | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+Write-Output "File written to C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
