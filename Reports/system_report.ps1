@@ -4,8 +4,8 @@
     Date:       06-27-2019
     Language:   PowerShell
     Purpose:    Lists basic system info.
-    Last Edit:  07-03-2019
-    Version:    v1.1.0
+    Last Edit:  07-16-2019
+    Version:    v1.1.1
 #>
 
 #Getting some information
@@ -66,7 +66,7 @@ function storage {
     'Storage'
     #Get-PSDrive | Where-Object {$_.Provider.Name -eq "FileSystem"}
     foreach ($_ in $storage) {
-        'Label: ' + $_.DeviceID + '\'
+        'Drive: ' + $_.DeviceID + '\'
         if ($_.VolumeName -ne '') {
         'Name: ' + $_.VolumeName
         }
@@ -85,3 +85,4 @@ hardware | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
 network | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
 storage | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
 Write-Output "File written to C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+''
