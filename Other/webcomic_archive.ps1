@@ -36,7 +36,7 @@ $download_xkcd=0
 function dirty_work {
     #Ensures creation of file structure
     New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content -ItemType Directory | Out-Null
-    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\ -ItemType Directory | Out-Null
+    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\ -ItemType Directory | Out-Null
 
     #Create log file in webcomic root
     "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
@@ -86,20 +86,25 @@ function questionable_content {
 function xkcd {
     #XKCD by Randall Munroe
     #https://xkcd.com/
-    $id
     $comic=1
     $err=0
+
+    #JSON files are the key: https://xkcd.com/json.html
+    #http://xkcd.com/$comic/info.0.json
 
     "Downloading XKCD by Randall Munroe..." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
     "Started on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
 
     while ($err -lt 5) {
-        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\$comic_$id.png"
+        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$comic"
         if ($path -eq $False) {
             try {
-                $url = "https://questionablecontent.net/comics/$comic.png"
-                Invoke-WebRequest $url -OutFile C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$comic_$id.png
-                $err=0
+                $WebResponse = Invoke-WebRequest "https://xkcd.com/$comic"
+                ForEach ($Image in $WebResponse.Images)
+                {
+                    $FileName = Split-Path $Image.src -Leaf
+                    Invoke-WebRequest $Image.src -OutFile "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$FileName"
+                }
                 $download=$download+1
                 $download_xkcd=$download_xkcd+1
             } catch {
@@ -111,9 +116,9 @@ function xkcd {
         $comic=$comic+1
     }
     $comic = $comic-6
-    $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
+    $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\xkcd | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
     "Completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Downloaded $download_qc items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Downloaded $download_xkcd items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
     "Total Comics: $comic" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
     "Total filesize: $size" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
     '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
@@ -121,7 +126,8 @@ function xkcd {
 
 # SCRIPT #
 dirty_work
-questionable_content
+#questionable_content
+xkcd
 
 # LOGGING & OUTPUT #
 Write-Output "Log written to C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log"
