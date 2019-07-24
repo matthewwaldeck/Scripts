@@ -3,9 +3,9 @@
     Developer:  Matt Waldeck
     Date:       07-08-2018
     Language:   PowerShell
-    Purpose:    Downloads a copy of my favourite webcomics, primarily for archival purposes.
+    Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
     Last Edit:  07-24-2019
-    Version:    v2.0.0
+    Version:    v2.0.1
 
     Comics:
         -Questionable Content
@@ -24,7 +24,7 @@
 #>
 
 $ErrorActionPreference = 'silentlycontinue'
-Write-Output "Writing files to C:\Users\$env:USERNAME\Documents\webcomics..."
+Write-Output "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics..."
 $download=0
 $download_qc=0
 
@@ -32,12 +32,12 @@ $download_qc=0
 # FUNCTIONS #
 function dirty_work {
     #Ensures creation of file structure
-    New-Item -Path C:\Users\$env:USERNAME\Documents\webcomics\questionable_content -ItemType directory | Out-Null
+    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content -ItemType directory | Out-Null
 
     #Create log file in webcomic root
-    "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    "Writing files to C:\Users\$env:USERNAME\Documents\webcomics." | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
+    "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
 }
 
 function Get-TimeStamp {
@@ -50,15 +50,15 @@ function questionable_content {
     $comic=1
     $err=0
 
-    "Downloading Questionable Content by Jeph Jacques..." | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    "Started on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
+    "Downloading Questionable Content by Jeph Jacques..." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Started on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
 
     while ($err -lt 5) {
-        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\webcomics\questionable_content\$comic.png"
+        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content\$comic.png"
         if ($path -eq $False) {
             try {
                 $url = "https://questionablecontent.net/comics/$comic.png"
-                Invoke-WebRequest $url -OutFile C:\Users\$env:USERNAME\Documents\webcomics\questionable_content\$comic.png
+                Invoke-WebRequest $url -OutFile C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content\$comic.png
                 $err=0
                 $download=$download+1
                 $download_qc=$download_qc+1
@@ -71,12 +71,12 @@ function questionable_content {
         $comic=$comic+1
     }
     $comic = $comic-6
-    $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\webcomics\questionable_content | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
-    "Completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    "Downloaded $download_qc items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    "Total Comics: $comic" | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    "Total filesize: $size" | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
+    $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
+    "Completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Downloaded $download_qc items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Total Comics: $comic" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Total filesize: $size" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
 }
 
 # SCRIPT #
@@ -84,8 +84,8 @@ dirty_work
 questionable_content
 
 # LOGGING & OUTPUT #
-Write-Output "Log written to C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log"
+Write-Output "Log written to C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log"
 Write-Output "Archive complete!"
 Write-Output ''
-"Downloaded a total of $download items." | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
-"Archive completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\webcomics\webcomic_archive.log
+"Downloaded a total of $download items." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+"Archive completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
