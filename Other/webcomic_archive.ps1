@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
     Last Edit:  07-25-2019
-    Version:    v2.1.1
+    Version:    v2.1.2
 
     Comics:
         -Questionable Content
@@ -31,7 +31,7 @@
 #>
 
 $ErrorActionPreference = 'silentlycontinue'
-$logPath = "C:\Users\$env:USERNAME\Documents\Webcomics\logs\webcomic-archive_$(get-date -f yyyy-MM-dd).log"
+$logPath = "C:\Users\$env:USERNAME\Documents\Webcomics\logs\webcomic-archive_$(get-date -f yyyy-MM-dd-HHmm).log"
 Write-Output "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics..."
 
 # FUNCTIONS #
@@ -69,7 +69,7 @@ function questionable_content {
         if ($path -eq $False) {
             try {
                 #Download currently selected comic
-                $url = "https://questionablecontent.net/comics/$comic.png"
+                $url = "https://questionablecontent.net/comics/$comic$fileType"
                 Invoke-WebRequest $url -OutFile ($filePath+$comic+$fileType)
                 $err=0
                 $download=$download+1
@@ -98,7 +98,6 @@ function xkcd {
     $title=''
     $names="C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\names.txt"
     $filePath="C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\"
-    $fileType=".jpg"
 
     "Downloading XKCD by Randall Munroe..." | Add-Content -Path $logPath
     "Started on $(Get-TimeStamp)" | Add-Content -Path $logPath
@@ -110,27 +109,28 @@ function xkcd {
 
     while ($err -lt 5) {
         #Test path
-        $path = Test-Path -Path ($filePath+$comic+$fileType)
-        if ($path -eq $False) {
-            try {
-                $json = Invoke-WebRequest "http://xkcd.com/$comic/info.0.json" | ConvertFrom-Json
-                $url = $json.img
-
+        try {
+            $json = Invoke-WebRequest "http://xkcd.com/$comic/info.0.json" | ConvertFrom-Json
+            $url = $json.img
+            $fileType = $url.substring($url.Length-4,4) #Finds the file extension
+            $path = Test-Path -Path ($filePath+$comic+$fileType) #Checks wether or not the file exists already
+            if ($path -eq $False) {
                 #Formats the title of the comic and adds it to an index
                 $title = $json.safe_title
                 $day = $json.day
                 $month = $json.month
                 $year = $json.year
                 "$comic - $title ($day/$month/$year)" | Add-Content $names
-
+    
                 #Download currently selected comic
                 Invoke-WebRequest $url -OutFile ($filePath+$comic+$fileType)
                 $download=$download+1
-            } catch {
-                $err=$err+1
+                $err=0
+            } else {
+                $err=0
             }
-        } else {
-            $err=0
+        } catch {
+            $err=$err+1
         }
         $comic=$comic+1
     }
@@ -153,5 +153,5 @@ $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomic
 Write-Output "Log written to $logpath"
 Write-Output "Archive complete!"
 Write-Output ''
-"Total filesize of archive: $size" | Add-Content -Path $logPath
+"Total archive size: $size" | Add-Content -Path $logPath
 "Archive completed on $(Get-TimeStamp)" | Add-Content -Path $logPath
