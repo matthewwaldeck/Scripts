@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
     Last Edit:  07-25-2019
-    Version:    v2.1.2
+    Version:    v2.1.3
 
     Comics:
         -Questionable Content
@@ -95,6 +95,7 @@ function xkcd {
     #https://xkcd.com/
     $comic=1
     $err=0
+    $download=0
     $title=''
     $names="C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\names.txt"
     $filePath="C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\"
