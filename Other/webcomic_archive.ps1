@@ -5,11 +5,11 @@
     Language:   PowerShell
     Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
     Last Edit:  07-24-2019
-    Version:    v2.0.2
+    Version:    v2.1.0
 
     Comics:
         -Questionable Content
-        -XKCD (Coming Soon-ish)
+        -XKCD
 
     What's New:
         -Rewrote script utilizing functions for easy expansion.
@@ -24,6 +24,7 @@
 #>
 
 $ErrorActionPreference = 'silentlycontinue'
+$logPath = "C:\Users\$env:USERNAME\Documents\Webcomics\logs\webcomic-archive_$(get-date -f yyyy-MM-dd).log"
 Write-Output "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics..."
 
 #Global variables for tracking number of items downloaded
@@ -35,13 +36,14 @@ $download_xkcd=0
 # FUNCTIONS #
 function dirty_work {
     #Ensures creation of file structure
-    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content -ItemType Directory | Out-Null
+    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\logs\ -ItemType Directory | Out-Null
+    New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content\ -ItemType Directory | Out-Null
     New-Item -Path C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\ -ItemType Directory | Out-Null
 
     #Create log file in webcomic root
-    "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path $logPath
+    "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics." | Add-Content -Path $logPath
+    '' | Add-Content -Path $logPath
 }
 
 function Get-TimeStamp {
@@ -54,8 +56,8 @@ function questionable_content {
     $comic=1
     $err=0
 
-    "Downloading Questionable Content by Jeph Jacques..." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Started on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Downloading Questionable Content by Jeph Jacques..." | Add-Content -Path $logPath
+    "Started on $(Get-TimeStamp)" | Add-Content -Path $logPath
 
     while ($err -lt 5) {
         $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content\$comic.png"
@@ -76,11 +78,11 @@ function questionable_content {
     }
     $comic = $comic-6
     $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\questionable_content | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
-    "Completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Downloaded $download_qc items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Total Comics: $comic" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Total filesize: $size" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Completed on $(Get-TimeStamp)" | Add-Content -Path $logPath
+    "Downloaded $download_qc items with $err errors." | Add-Content -Path $logPath
+    "Total Comics: $comic" | Add-Content -Path $logPath
+    "Total filesize: $size" | Add-Content -Path $logPath
+    '' | Add-Content -Path $logPath
 }
 
 function xkcd {
@@ -88,23 +90,23 @@ function xkcd {
     #https://xkcd.com/
     $comic=1
     $err=0
+    $title=''
 
-    #JSON files are the key: https://xkcd.com/json.html
-    #http://xkcd.com/$comic/info.0.json
+    #Step 1: http://xkcd.com/$comic/info.0.json
+    #Step 2: Find "img:" tag
+    #Step 3: Use URL to download comic
 
-    "Downloading XKCD by Randall Munroe..." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Started on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Downloading XKCD by Randall Munroe..." | Add-Content -Path $logPath
+    "Started on $(Get-TimeStamp)" | Add-Content -Path $logPath
 
     while ($err -lt 5) {
-        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$comic"
+        $path = Test-Path -Path "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$comic. $title"
         if ($path -eq $False) {
             try {
-                $WebResponse = Invoke-WebRequest "https://xkcd.com/$comic"
-                ForEach ($Image in $WebResponse.Images)
-                {
-                    $FileName = Split-Path $Image.src -Leaf
-                    Invoke-WebRequest $Image.src -OutFile "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$FileName"
-                }
+                $json = Invoke-WebRequest "http://xkcd.com/$comic/info.0.json" | ConvertFrom-Json
+                $url = $json.img
+                $title = $json.title
+                Invoke-WebRequest $url -OutFile "C:\Users\$env:USERNAME\Documents\Webcomics\xkcd\$comic. $title.png"
                 $download=$download+1
                 $download_xkcd=$download_xkcd+1
             } catch {
@@ -117,21 +119,23 @@ function xkcd {
     }
     $comic = $comic-6
     $size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\xkcd | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
-    "Completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Downloaded $download_xkcd items with $err errors." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Total Comics: $comic" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    "Total filesize: $size" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-    '' | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+    "Completed on $(Get-TimeStamp)" | Add-Content -Path $logPath
+    "Downloaded $download_xkcd items with $err errors." | Add-Content -Path $logPath
+    "Total Comics: $comic" | Add-Content -Path $logPath
+    "Total filesize: $size" | Add-Content -Path $logPath
+    '' | Add-Content -Path $logPath
 }
 
 # SCRIPT #
 dirty_work
-#questionable_content
+questionable_content
 xkcd
 
 # LOGGING & OUTPUT #
-Write-Output "Log written to C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log"
+$size = "{0:N2} MB" -f ((Get-ChildItem C:\Users\$env:USERNAME\Documents\Webcomics\xkcd | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1MB)
+Write-Output "Log written to $logpath"
 Write-Output "Archive complete!"
 Write-Output ''
-"Downloaded a total of $download items." | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
-"Archive completed on $(Get-TimeStamp)" | Add-Content -Path C:\Users\$env:USERNAME\Documents\Webcomics\webcomic_archive.log
+"Downloaded a total of $download items." | Add-Content -Path $logPath
+"Total filesize of archive: $size" | Add-Content -Path $logPath
+"Archive completed on $(Get-TimeStamp)" | Add-Content -Path $logPath
