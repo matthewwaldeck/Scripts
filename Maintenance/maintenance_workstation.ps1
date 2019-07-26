@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  07-08-2019
-    Version:    v1.2.0
+    Last Edit:  07-25-2019
+    Version:    v1.2.1
 
     Tasks:
       -Clean up temp files
@@ -177,9 +177,10 @@ if (!(Test-Administrator)) {
 }
 
 "Would you like to shut down your PC? (y/n)"
-$shutdown = 0
 if (Read-Host -eq 'y') {
   $shutdown = 1
+} else {
+  $shutdown = 0
 }
 
 CleanupTemp
@@ -200,4 +201,6 @@ $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 if ($shutdown -eq 1) {
   "$(Get-TimeStamp) - Shutting down workstation in 30 minutes." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
   ShutdownComputer
+} else {
+  "$(Get-TimeStamp) - Workstation will not shut down." | Add-Content -Path C:\Users\$env:UserName\Desktop\maintenance.log
 }
