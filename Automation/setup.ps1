@@ -3,9 +3,9 @@
     Developer:  Matt Waldeck
     Date:       07-26-2018
     Language:   PowerShell
-    Purpose:    Downloads and installs basic software on a new computer.
+    Purpose:    Downloads and installs software on a new computer.
     Last Edit:  07-26-2019
-    Version:    v0.1.0 (BETA)
+    Version:    v0.1.0
 
     TASKS:
     -Log all tasks
@@ -89,3 +89,4 @@ download
 #setup
 cleanup
 "Setup completed at $(Get-TimeStamp)" | Add-Content -Path $logPath
+Write-Host ''
