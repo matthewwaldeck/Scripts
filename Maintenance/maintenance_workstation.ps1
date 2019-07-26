@@ -24,7 +24,7 @@
 #Get pre-maintenance used disk space
 $TempDisk = Get-WmiObject -Class win32_logicaldisk
 $OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
-$logPath = "C:\Users\$env:UserName\Desvktop\maintenance.log"
+$logPath = "C:\Users\$env:UserName\Desktop\maintenance.log" #Log file destination
 
 #Functions
 function Test-Administrator {
