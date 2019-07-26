@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  07-25-2019
-    Version:    v1.2.2
+    Last Edit:  07-26-2019
+    Version:    v1.3.0
 
     Tasks:
       -Clean up temp files
@@ -18,13 +18,13 @@
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
 
     Do not run this file directly, use maintenance_workstation.bat to run with admin priviledges.
-    This will ensure all features work properly.
+    (Or run from admin console session...) This will ensure all features work properly.
 #>
 
 #Get pre-maintenance used disk space
 $TempDisk = Get-WmiObject -Class win32_logicaldisk
 $OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
-$logPath = "C:\Users\$env:UserName\Desktop\maintenance.log" #Log file destination
+$logPath = "C:\Users\$env:UserName\Desktop\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
 
 #Functions
 function Test-Administrator {
@@ -178,12 +178,9 @@ if (!(Test-Administrator)) {
 }
 
 "Would you like to shut down your PC? (y/n)"
-if (Read-Host -eq 'y') {
-  $shutdown = 1
-} else {
-  $shutdown = 0
-}
+$shutdown = Read-Host
 
+Clear-Host
 CleanupTemp
 CleanupWinTemp
 CleanupAppDataTemp
@@ -198,8 +195,8 @@ $NewDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk
 
 "You have freed up " + ($OldDisk-$NewDisk) + " GB on your C: drive." | Add-Content -Path $logPath
 "$(Get-TimeStamp) - Maintenance completed!" | Add-Content -Path $logPath
-"$(Get-TimeStamp) - Shutdown = $shutdown"
-if ($shutdown -eq 1) {
+"$(Get-TimeStamp) - Shutdown = $shutdown" | Add-Content -Path $logPath
+if ($shutdown -eq 'y') {
   "$(Get-TimeStamp) - Shutting down workstation in 30 minutes." | Add-Content -Path $logPath
   ShutdownComputer
 } else {
