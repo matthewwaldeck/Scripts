@@ -5,7 +5,7 @@
     Language:   PowerShell
     Purpose:    Downloads and installs software on a new computer.
     Last Edit:  07-26-2019
-    Version:    v0.1.0
+    Version:    v0.1.1
 
     TASKS:
     -Log all tasks
@@ -32,17 +32,37 @@ function tempCheck {
 
 function download {
     #Google Chrome
-    Write-Host "Downloading Google Chrome..."
-    (New-Object System.Net.WebClient).DownloadFile('http://dl.google.com/chrome/install/375.126/chrome_installer.exe', 'C:\temp\GoogleChrome.exe')
+    try {
+        Write-Host "Downloading Google Chrome..."
+        (New-Object System.Net.WebClient).DownloadFile('http://dl.google.com/chrome/install/375.126/chrome_installer.exe', 'C:\temp\GoogleChrome.exe')
+    } Catch {
+        Write-Host "Google Chrome failed to download!"
+        "Google Chrome failed to download!" | Add-Content -Path $logPath
+        $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
+    }
 
     #Spotify
-    Write-Host "Downloading Spotify..."
-    (New-Object System.Net.WebClient).DownloadFile('https://download.scdn.co/SpotifySetup.exe', 'C:\temp\Spotify.exe')
+    try {
+        Write-Host "Downloading Spotify..."
+        (New-Object System.Net.WebClient).DownloadFile('https://download.scdn.co/SpotifySetup.exe', 'C:\temp\Spotify.exe')
+    } Catch {
+        Write-Host "Spotify failed to download!"
+        "Spotify failed to download!" | Add-Content -Path $logPath
+        $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
+    }
 
-    #Spotify
-    Write-Host "Downloading Visual Studio Code..."
-    (New-Object System.Net.WebClient).DownloadFile('https://aka.ms/win32-x64-user-stable', 'C:\temp\VS_Code.exe')
-    
+    #Virual Studio Code
+    try {
+        Write-Host "Downloading Visual Studio Code..."
+        (New-Object System.Net.WebClient).DownloadFile('https://aka.ms/win32-x64-user-stable', 'C:\temp\VS_Code.exe')
+    } Catch {
+        Write-Host "Virtual Studio Code failed to download!"
+        "Virtual Studio Code failed to download!" | Add-Content -Path $logPath
+        $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
+    }
 }
 
 function setup {
@@ -54,6 +74,7 @@ function setup {
     } Catch {
         "Failed to install Google Chrome!" | Add-Content -Path $logPath
         $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
     }
 
     try {
@@ -64,6 +85,7 @@ function setup {
     } Catch {
         "Failed to install Spotify!" | Add-Content -Path $logPath
         $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
     }
 
     try {
@@ -74,6 +96,7 @@ function setup {
     } Catch {
         "Failed to install Visual Studio Code!" | Add-Content -Path $logPath
         $_ | Add-Content -Path $logPath
+        '' | Add-Content -Path $logPath
     }
 }
 
