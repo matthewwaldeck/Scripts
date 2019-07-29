@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  07-26-2019
-    Version:    v1.3.0
+    Last Edit:  07-29-2019
+    Version:    v1.4.0
 
     Tasks:
       -Clean up temp files

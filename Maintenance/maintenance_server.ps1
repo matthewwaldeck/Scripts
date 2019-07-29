@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for servers.
-    Last Edit:  07-08-2019
-    Version:    v1.1.0
+    Last Edit:  07-29-2019
+    Version:    v1.2.0
 
     Tasks:
         -Check capacity of all storage devices.
