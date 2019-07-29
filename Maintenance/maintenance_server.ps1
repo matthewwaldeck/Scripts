@@ -20,7 +20,16 @@
     This will ensure all features work properly.
 #>
 
-$logPath = "C:\Users\$env:UserName\Desktop\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
+$logPath = "C:\Users\$env:UserName\Documents\Maintenance Reports\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
+
+function dirty_work {
+  #Ensures creation of maintenance folder
+  New-Item -Path "C:\Users\$env:UserName\Documents\Maintenance Reports\" -ItemType Directory | Out-Null
+
+  #Create log file
+  "$(Get-TimeStamp) - Archive started by $env:USERNAME" | Set-Content -Path $logPath
+  "Log file will be written to C:\Users\$env:UserName\Documents\Maintenance Reports"
+}
 
 function Test-Administrator {
     $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -93,6 +102,8 @@ function CheckDiskStatus {
 
 
 #Script
+dirty_work
+
 "$(Get-TimeStamp) - Server Maintenance started by $env:UserName" | Set-Content -Path $logPath
 if (!(Test-Administrator)) {
   "$(Get-TimeStamp) - Script must be run as administrator. Exiting script." | Add-Content -Path $logPath

@@ -24,7 +24,16 @@
 #Get pre-maintenance used disk space
 $TempDisk = Get-WmiObject -Class win32_logicaldisk
 $OldDisk = ([Math]::Round($TempDisk.Capacity /1GB,2)) - ([Math]::Round($TempDisk.FreeSpace /1GB,2))
-$logPath = "C:\Users\$env:UserName\Desktop\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
+$logPath = "C:\Users\$env:UserName\Documents\Maintenance Reports\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
+
+function dirty_work {
+  #Ensures creation of maintenance folder
+  New-Item -Path "C:\Users\$env:UserName\Documents\Maintenance Reports\" -ItemType Directory | Out-Null
+
+  #Create log file
+  "$(Get-TimeStamp) - Archive started by $env:USERNAME" | Set-Content -Path $logPath
+  "Log file will be written to C:\Users\$env:UserName\Documents\Maintenance Reports"
+}
 
 #Functions
 function Test-Administrator {
@@ -169,7 +178,7 @@ function ShutdownComputer {
 
 
 #Script
-"$(Get-TimeStamp) - Maintenance started by $env:UserName" | Set-Content -Path $logPath
+dirty_work
 
 if (!(Test-Administrator)) {
   "$(Get-TimeStamp) - Script must be run as administrator. Exiting script." | Add-Content -Path $logPath
