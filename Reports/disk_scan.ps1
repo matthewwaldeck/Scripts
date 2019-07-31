@@ -100,45 +100,6 @@ Function folderScan {
     Write-Host " "
 }
  
-###################################
-# Custom Folder Scan
-###################################
- 
-Function customScan {
-    Write-Host " "
-    write-host "Would you like to scan a specific directory for subfolder sizes?"
-    write-host "Ex C:\, C:\Windows"
-    write-host " "
-    write-host "Press CTRL + C to exit at any time."
-    write-host " "
-    $customLocation= Read-Host 'Please enter directory path here'
-    $subDirectories = Get-ChildItem $customLocation | Where-Object{($_.PSIsContainer)} | foreach-object{$_.Name}
-    Write-Host " "
-    Write-Host "Calculating folder sizes for $customLocation,"
-    Write-Host "this process will take a few minutes..."
-    " "  | out-file -width $outputWidth $findFilesFoldersOutput -append
-    "Estimated folder sizes for $customLocation :" | out-file -width $outputWidth $findFilesFoldersOutput -append
-    Write-Host " "
-    " "  | out-file -width $outputWidth $findFilesFoldersOutput -append
-    $folderOutput = @{}
-    foreach ($i in $subDirectories)
-        {
-        $targetDir = $customLocation + "\" + $i
-        $folderSize = (Get-ChildItem $targetDir -Recurse -Force | Measure-Object -Property Length -Sum).Sum 2> $null
-        $folderSizeComplete = "{0:N0}" -f ($folderSize / 1MB) + "MB" 
-        $folderOutput.Add("$targetDir" , "$folderSizeComplete")
-        write-host " Calculating $targetDir..."
-    }
-    $folderOutput.GetEnumerator() | sort-Object Name | format-table -autosize | out-file -width $outputWidth $findFilesFoldersOutput -append
-    Write-Host " "
-    Write-Host "Attempting to open scan results with notepad..."
-    c:\windows\system32\notepad.exe "$findFilesFoldersOutput"
-    Write-Host " "
-    Write-Host "Scan saved to: $findFilesFoldersOutput..."
-    Write-Host " "
-    customScan
-}
- 
 # Pause
 Function Pause {
     Write-Host -NoNewLine "Press any key to continue..."
@@ -156,4 +117,3 @@ $time | out-file -width $outputWidth $findFilesFoldersOutput
 driveScan
 fileScan
 folderScan
-customScan
