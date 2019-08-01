@@ -5,11 +5,12 @@
     Purpose:    Runs CPU at around 60% using basic math jobs.
                 Honestly I'm just cold but don't want to slow down my machine.
                 See stress_cpu.ps1 for the actual stress test.
-    Last Edit:  07-04-2019
-    Version:    v1.0.2
+    Last Edit:  07-31-2019
+    Version:    v1.0.3
 #>
 
 # Warning
+Clear-Host
 Write-Output "Warning: This may affect system performance."
 
 $coreCount = (Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors) /2

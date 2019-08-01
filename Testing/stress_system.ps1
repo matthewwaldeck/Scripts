@@ -3,8 +3,8 @@
     Date:       07-04-2019
     Language:   PowerShell
     Purpose:    Fills up all available RAM, then holds the CPU at 100% utilization.
-    Last Edit:  07-04-2019
-    Version:    v1.2.0
+    Last Edit:  07-31-2019
+    Version:    v1.2.1
 
     Note:
     Memory test pulled from Luke Brennan's "Beat Up Windows" script
@@ -12,6 +12,7 @@
 #>
 
 # Warning
+Clear-Host
 Write-Output "Warning: This may affect system performance."
 
 # Fill up all available RAM

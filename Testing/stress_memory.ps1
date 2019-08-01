@@ -5,6 +5,7 @@
 #>
 
 # Warning
+Clear-Host
 Write-Output "Warning: This may affect system performance."
 
 # RAM in box

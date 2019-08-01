@@ -3,11 +3,12 @@
     Date:       07-04-2019
     Language:   PowerShell
     Purpose:    Stresses CPU to 100% using basic math jobs.
-    Last Edit:  07-04-2019
-    Version:    v1.1.1
+    Last Edit:  07-31-2019
+    Version:    v1.1.2
 #>
 
 # Warning
+Clear-Host
 Write-Output "Warning: This may affect system performance."
 
 $coreCount = Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors
