@@ -3,17 +3,21 @@
     Developer:  Matt Waldeck
     Date:       07-26-2018
     Language:   PowerShell
-    Purpose:    Downloads and installs software on a new computer.
-    Last Edit:  08-02-2019
-    Version:    v0.2.0 (Testing required)
+    Purpose:    Automates basic setup steps for a new Windows PC.
+    Last Edit:  08-13-2019
+    Version:    v0.2.1 (Testing required)
 
     TASKS:
-    -Log all tasks
-    -Install software
+    -Create log
+    -Ensure basic power options are present
+    -Set power mode to High Performance
+    -Ensure temp file exists
+    -Download and install software
         -Google Chrome
         -Spotify
         -Visual Studio Code
-    -Set up power options
+    -Clean up temp file
+    -Set power mode to Balanced
 #>
 
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
@@ -25,6 +29,8 @@ function Get-TimeStamp {
 
 function enablePower {
     #Ensures all default Windows power plans are present, with the exception of Ultimate.
+    #I need to figure out how to check which plans are already present and only install the ones that are missing.
+    #This is to prevent adding duplicate plans.
     powercfg.exe -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a
     Write-Host "Power plan 'Power Saving' added."
     powercfg.exe -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e
@@ -87,7 +93,7 @@ function download {
         '' | Add-Content -Path $logPath
     }
 
-    #Virual Studio Code
+    #Visual Studio Code
     try {
         Write-Host "Downloading Visual Studio Code..."
         (New-Object System.Net.WebClient).DownloadFile('https://aka.ms/win32-x64-user-stable', 'C:\temp\VS_Code.exe')
@@ -159,16 +165,18 @@ function cleanup {
 "Setup started at $(Get-TimeStamp) by $env:UserName" | Set-Content -Path $logPath
 '' | Add-Content -Path $logPath
 
+#This does not currently function as intended. Check function for notes.
 #$power = Read-Host "Would you like to install the default power plans? (y/n)"
 if ($power -eq "y") {
     enablePower
 }
 
-setPower
+#setPower #Not functional (pun intended)
 tempCheck
 download
 #setup
 cleanup
+
 '' | Add-Content -Path $logPath
 "Setup completed at $(Get-TimeStamp)" | Add-Content -Path $logPath
 Write-Host ''
