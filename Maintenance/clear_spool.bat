@@ -1,4 +1,5 @@
 @echo off
+:: https://community.spiceworks.com/scripts/show/1577-clear-and-reset-print-spooler
 echo Stopping print spooler.
 echo.
 net stop spooler
