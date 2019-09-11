@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for servers.
-    Last Edit:  07-29-2019
-    Version:    v1.2.0
+    Last Edit:  09-11-2019
+    Version:    v1.2.1
 
     Tasks:
         -Check capacity of all storage devices.
@@ -20,14 +20,21 @@
     This will ensure all features work properly.
 #>
 
-$logPath = "C:\Users\$env:UserName\Documents\Maintenance Reports\maintenance_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
+$logPath = "C:\Users\$env:UserName\Documents\Maintenance Reports\'$env:COMPUTERNAME'_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
 
 function dirty_work {
-  #Ensures creation of maintenance folder
-  New-Item -Path "C:\Users\$env:UserName\Documents\Maintenance Reports\" -ItemType Directory | Out-Null
+    #Ensures creation of maintenance folder
+    $path = Test-Path -Path "C:\Users\$env:UserName\Documents\Maintenance Reports\"
+    if ($path -eq $false) {
+      New-Item -Path "C:\Users\$env:UserName\Documents\Maintenance Reports\" -ItemType Directory | Out-Null
+      "Created log directory!" | Set-Content -Path $logPath
+    } else {
+      Write-Host "Log directory already present!"
+      "Log directory already present!" | Set-Content -Path $logPath 
+    }
 
   #Create log file
-  "$(Get-TimeStamp) - Archive started by $env:USERNAME" | Set-Content -Path $logPath
+  "$(Get-TimeStamp) - Maintenance started by $env:USERNAME" | Set-Content -Path $logPath
   "Log file will be written to C:\Users\$env:UserName\Documents\Maintenance Reports"
 }
 
