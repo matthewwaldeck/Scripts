@@ -6,9 +6,10 @@
     Last Edit:  07-15-2019
     Version:    v1.1.0
 
-    Note:
-        The only reason I use this instead of the startup menu in Task Manager is because I take my laptop home with me,
-        and if I work on something at home I don't necessarily want everything open that I usually do on my average day.
+    To-Do
+    -Add time/date condition for starting apps
+    -Have the script run whenever the computer is started
+    -Add my AD and Citrix Receiver scripts to this, including a password prompt
 #>
 
 # Google Chrome
