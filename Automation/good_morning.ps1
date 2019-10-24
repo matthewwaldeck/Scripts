@@ -5,7 +5,7 @@
     Purpose:    Launches all my usual apps in the morning, but only during work hours. This ensures that if my laptop is turned on outside of work hours
                 it doesn't instantly load my entire suite of apps. This saves battery life and improves performance when working away from my desk.
     Last Edit:  10-24-2019
-    Version:    v2.1.1
+    Version:    v2.1.2
 
     NOTES:
     -If you are going to use this script, please remember to disable "Launch on Startup" settings in each app.
@@ -16,7 +16,7 @@
 # VARIABLES & URLs
 $intranetURL = "http://daily.cowangroup.ca/EN/Pages/default.aspx"
 $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
-$dayStart = "09" #Start of work day. Must be in 24h format
+$dayStart = "07" #Start of work day. Must be in 24h format
 $dayEnd = "17" #End of work day. Must be in 24h format
 
 # FUNCTIONS
