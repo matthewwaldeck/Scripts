@@ -4,7 +4,7 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for servers.
-    Last Edit:  09-11-2019
+    Last Edit:  10-24-2019
     Version:    v1.2.1
 
     Tasks:
@@ -13,7 +13,7 @@
         -Run SFC Scan and report errors
         -Log all results
 
-    Note: Original code from the following link, has been modified to fit my needs.
+    Note: Original code from the following link, has been significantly modified and added to.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/ServerMaintenance.ps1
 
     Do not run this file directly, use maintenance_server.bat to run with admin priviledges.

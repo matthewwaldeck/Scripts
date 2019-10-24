@@ -4,8 +4,8 @@
     Date:       06-18-2018
     Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  09-11-2019
-    Version:    v1.4.1
+    Last Edit:  10-24-2019
+    Version:    v1.4.2
 
     Tasks:
       -Clean up temp files
@@ -14,7 +14,7 @@
       -Log all results
       -Shutdown computer (If requested)
 
-    Note: Original code from the following link, has been modified to fit my needs.
+    Note: Original code from the following link, has been significantly modified and added to.
     https://github.com/Mike-Rotec/PowerShell-Scripts/blob/master/Maintenance/WorkstationMaintenance.ps1
 
     Do not run this file directly, use maintenance_workstation.bat to run with admin priviledges.
