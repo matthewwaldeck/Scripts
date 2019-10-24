@@ -25,7 +25,7 @@ function launchApps {
     start-process 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe' "$intranetURL", "$helpdeskURL" #Chrome with intranet site and helpdesk open
     Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE' #Outlook
     Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe' #Skype
-    # !!!NOT FUNCTIONAL!!! Start-Process "C:\ProgramData\$env:USERNAME \Microsoft\Teams\Update.exe" #Teams
+    #Start-Process "C:\ProgramData\$env:USERNAME \Microsoft\Teams\Update.exe" #Teams, currently nonfunctional.
     Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe' #TeamViewer
     Start-Process 'C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe' #RDP
     Write-Host "Done."
