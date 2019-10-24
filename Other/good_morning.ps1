@@ -19,18 +19,20 @@ $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
 $dayStart = "09" #Start of work day. Must be in 24h format
 $dayEnd = "17" #End of work day. Must be in 24h format
 
-# SCRIPT
-$time = Get-Date -Format "HH"
-if (($time -ge $dayStart) -and ($time -lt $dayEnd)) {
-    launchApps
-}
-
 # FUNCTIONS
 function launchApps {
+    Write-Host "Launching Apps..."
     start-process "chrome.exe" "$intranetURL", "$helpdeskURL" #Chrome with The Daily and helpdesk open
     Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE' #Outlook
     Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe' #Skype
     Start-Process "C:\ProgramData\$env:USERNAME\Microsoft\Teams\Update.exe" #Teams
     Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe' #TeamViewer
     Start-Process 'C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe' #RDP
+    Write-Host "Done."
+}
+
+# SCRIPT
+$time = Get-Date -Format "HH"
+if (($time -ge $dayStart) -and ($time -lt $dayEnd)) {
+    launchApps
 }
