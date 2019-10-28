@@ -4,8 +4,8 @@
     Language:   PowerShell
     Purpose:    Launches all my usual apps in the morning, but only during work hours. This ensures that if my laptop is turned on outside of work hours
                 it doesn't instantly load my entire suite of apps. This saves battery life and improves performance when working away from my desk.
-    Last Edit:  10-24-2019
-    Version:    v2.1.2
+    Last Edit:  10-28-2019
+    Version:    v2.1.3
 
     NOTES:
     -If you are going to use this script, please remember to disable "Launch on Startup" settings in each app.
@@ -19,6 +19,7 @@ $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
 $dayStart = "07" #Start of work day. Must be in 24h format
 $dayEnd = "17" #End of work day. Must be in 24h format
 
+
 # FUNCTIONS
 function launchApps {
     Write-Host "Launching Apps..."
@@ -27,9 +28,9 @@ function launchApps {
     Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe' #Skype
     #Start-Process "C:\ProgramData\$env:USERNAME\Microsoft\Teams\Update.exe" #Teams, currently nonfunctional.
     Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe' #TeamViewer
-    Start-Process 'C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe' #RDP
     Write-Host "Done."
 }
+
 
 # SCRIPT
 $time = Get-Date -Format "HH"
