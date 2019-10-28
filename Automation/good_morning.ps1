@@ -2,22 +2,24 @@
     Developer:  Matt Waldeck
     Date:       07-12-2019
     Language:   PowerShell
-    Purpose:    Launches all my usual apps in the morning, but only during work hours. This ensures that if my laptop is turned on outside of work hours
-                it doesn't instantly load my entire suite of apps. This saves battery life and improves performance when working away from my desk.
+    Purpose:    Launches all my usual apps in the morning, but only during work hours. This saves battery life and improves performance when working
+                from home by not auto-starting everything on my laptop.
     Last Edit:  10-28-2019
-    Version:    v2.1.3
+    Version:    v2.1.4
 
     NOTES:
     -If you are going to use this script, please remember to disable "Launch on Startup" settings in each app.
     -Please also remember to update the work hours criteria with your normal work hours.
     -You can add more websites to auto-open with Chrome by adding to the comma seperated list.
+    -$dayStart should be set before your actual start time, in case you come in early.
+    -$dayEnd should be set whenever you normally leave for home.
 #>
 
 # VARIABLES & URLs
 $intranetURL = "http://daily.cowangroup.ca/EN/Pages/default.aspx"
 $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
-$dayStart = "07" #Start of work day. Must be in 24h format
-$dayEnd = "17" #End of work day. Must be in 24h format
+$dayStart = "07" #Start of work day. Must be in 24h format. Default is 7am.
+$dayEnd = "17" #End of work day. Must be in 24h format. Default is 5pm.
 
 
 # FUNCTIONS
