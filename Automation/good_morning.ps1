@@ -4,8 +4,8 @@
     Language:   PowerShell
     Purpose:    Launches all my usual apps in the morning, but only during work hours. This saves battery life and improves performance when working
                 from home by not auto-starting everything on my laptop.
-    Last Edit:  10-29-2019
-    Version:    v2.2.0
+    Last Edit:  10-30-2019
+    Version:    v2.2.1
 
     SETUP:
     -Create a task in Task Schduler to be run when you log into your account
@@ -24,6 +24,7 @@
     -Please feel free to let me know if there are any apps you would like added and I will happily add them.
 #>
 
+
 # VARIABLES & URLs
 $intranetURL = "http://daily.cowangroup.ca/EN/Pages/default.aspx"
 $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
@@ -35,12 +36,13 @@ $dayEnd = "17" #End of work day. Must be in 24h format. Default is 5pm.
 function launchApps {
     #Uncomment lines to enable individual apps. I'll be adding popular applications to this over time.
     Write-Host "Launching Apps..."
-    start-process 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe' "$intranetURL", "$helpdeskURL" #Chrome with intranet site and helpdesk open
-    Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE' #Outlook
-    Start-Process 'C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe' #Skype
+    start-process "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" "$intranetURL", "$helpdeskURL" #Chrome with intranet site and helpdesk open
+    Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE" #Outlook
+    Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe" #Skype
     Start-Process "C:\ProgramData\$env:USERNAME\Microsoft\Teams\current\teams.exe" #Teams
-    #Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe' #TeamViewer
-    #Start-Process 'C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe' #RDP
+    #Start-Process "C:\Program Files (x86)\TeamViewer\TeamViewer.exe" #TeamViewer
+    #Start-Process "C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe" #RDP
+    #Start-Process "C:\Program Files (x86)\Telephony\TouchPoint\TouchPoint.exe" #TouchPoint
     Write-Host "Done."
 }
 
