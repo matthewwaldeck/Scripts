@@ -4,8 +4,8 @@
     Language:   PowerShell
     Purpose:    Launches all my usual apps in the morning, but only during work hours. This saves battery life and improves performance when working
                 from home by not auto-starting everything on my laptop.
-    Last Edit:  10-31-2019
-    Version:    v2.2.2
+    Last Edit:  11-6-2019
+    Version:    v2.2.3
 
     SETUP
     -Create a task in Task Schduler to be run when you log into your account
@@ -39,10 +39,11 @@ function launchApps {
     Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE" #Outlook
     Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe" #Skype
     Start-Process "C:\ProgramData\$env:USERNAME\Microsoft\Teams\current\teams.exe" #Teams
+    Start-Process "C:\Program Files (x86)\Telephony\TouchPoint\TouchPoint.exe" #TouchPoint
     #Start-Process "C:\Program Files (x86)\TeamViewer\TeamViewer.exe" #TeamViewer
     #Start-Process "C:\Program Files (x86)\Microsoft\Remote Desktop Connection Manager\RDCMan.exe" #RDP
-    #Start-Process "C:\Program Files (x86)\Telephony\TouchPoint\TouchPoint.exe" #TouchPoint
     Write-Host "Done."
+    Start-Sleep -Seconds 5
 }
 
 
