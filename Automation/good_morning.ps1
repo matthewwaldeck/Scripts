@@ -5,7 +5,7 @@
     Purpose:    Launches all my usual apps in the morning, but only during work hours. This saves battery life and improves performance when working
                 from home by not auto-starting everything on my laptop.
     Last Edit:  11-19-2019
-    Version:    v2.3.1
+    Version:    v2.3.2
 
     SETUP
     -Create a task in Task Schduler to be run when you log into your account
@@ -24,7 +24,7 @@
 
 
 # VARIABLES & URLS
-$intranetURL = "http://daily.cowangroup.ca/EN/Pages/default.aspx"
+#$intranetURL = "http://daily.cowangroup.ca/EN/Pages/default.aspx" #Uncomment and update for company Intranet site
 $helpdeskURL = "http://phl-helpdesk:8080/WOListView.do"
 $dayStart = "07" #Start of work day -1 hour. Must be in 24h format. Default is 7am.
 $dayEnd = "17" #End of work day. Must be in 24h format. Default is 5pm.
@@ -34,7 +34,7 @@ $dayEnd = "17" #End of work day. Must be in 24h format. Default is 5pm.
 function launchApps {
     #Uncomment lines to enable individual apps. I'll be adding popular applications over time.
     Write-Host "Launching Apps..."
-    start-process "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" "$intranetURL", "$helpdeskURL" #Chrome with intranet site and helpdesk open
+    start-process "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" "$helpdeskURL" #Chrome
     Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE" #Outlook
     Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\lync.exe" #Skype
     Start-Process "C:\ProgramData\$env:USERNAME\Microsoft\Teams\current\teams.exe" #Teams
