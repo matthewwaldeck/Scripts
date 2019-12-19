@@ -3,20 +3,26 @@
     Developer:  Matt Waldeck
     Date:       07-26-2018
     Language:   PowerShell
-    Purpose:    Automates basic setup steps for a new Windows PC.
-    Last Edit:  08-13-2019
-    Version:    v0.2.1 (Testing required)
+    Purpose:    Automates the basic setup process for a new Windows PC.
+    Last Edit:  12-19-2019
+    Version:    0.3.1
 
     TASKS:
     -Create log
-    -Set power mode to High Performance
+    -Rename the computer
     -Ensure temp file exists
     -Download and install software
         -Google Chrome
         -Spotify
-        -Visual Studio Code
     -Clean up temp file
-    -Set power mode to Balanced
+
+    TO-DO:
+    -Programs to add
+        -Adobe Reader
+    -Power modes
+    -Disk cleanup + defrag
+    -Remove junk from taskbar & start menu
+    -Set defaults
 #>
 
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
@@ -24,6 +30,12 @@ $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).
 # FUNCTIONS #
 function Get-TimeStamp {
     return "[{0:MM/dd/yy} at {0:HH:mm:ss}]" -f (Get-Date)
+}
+
+function rename {
+    $comp_name =  Read-Host "Enter desired computer name..."
+    Rename-Computer -NewName $comp_name
+    Write-Host "Computer name set to $comp_name." | Add-Content -Path $logPath
 }
 
 function tempCheck {
@@ -34,11 +46,6 @@ function tempCheck {
         "Created C:\temp" | Add-Content -Path $logPath
         Write-Host "Created temp file."
     }
-}
-
-function rename {
-    $comp_name =  Read-Host "Enter desired computer name..."
-    Rename-Computer -NewName $comp_name
 }
 
 function download {
@@ -69,23 +76,9 @@ function download {
         $_ | Add-Content -Path $logPath
         '' | Add-Content -Path $logPath
     }
-
-    #Visual Studio Code
-    try {
-        Write-Host "Downloading Visual Studio Code..."
-        (New-Object System.Net.WebClient).DownloadFile('https://aka.ms/win32-x64-user-stable', 'C:\temp\VS_Code.exe')
-        "Downloaded Visual Studio Code." | Add-Content -Path $logPath
-        Write-Host "Success!"
-        Write-Host ''
-    } Catch {
-        Write-Host "Virtual Studio Code failed to download!"
-        "Virtual Studio Code failed to download!" | Add-Content -Path $logPath
-        $_ | Add-Content -Path $logPath
-        '' | Add-Content -Path $logPath
-    }
 }
 
-function setup {
+function install {
     try {
         Write-Host "Installing Google Chrome..."
         C:\temp\GoogleChrome.exe /silent /install
@@ -107,17 +100,6 @@ function setup {
         $_ | Add-Content -Path $logPath
         '' | Add-Content -Path $logPath
     }
-
-    try {
-        Write-Host "Installing Visual Studio Code..."
-        C:\temp\VS_Code.exe /silent /install
-        Write-Host "Visual Studio Code has been installed!"
-        "$(Get-TimeStamp) - Successfully installed Visual Studio Code!" | Add-Content -Path $logPath
-    } Catch {
-        "Failed to install Visual Studio Code!" | Add-Content -Path $logPath
-        $_ | Add-Content -Path $logPath
-        '' | Add-Content -Path $logPath
-    }
 }
 
 function cleanup {
@@ -130,16 +112,18 @@ function cleanup {
 # SCRIPT #
 "Setup started at $(Get-TimeStamp) by $env:UserName" | Set-Content -Path $logPath
 '' | Add-Content -Path $logPath
-$setup = Read-Host "Would you like to install the default power plans? (y/n)"
+$setup = Read-Host "Would you like to install some basic programs such as Chrome and Spotify? (y/n)"
 
-tempCheck
-rename
-if ($setup -eq "y") {
-    "Setup initiated..." | Add-Content -Path $logPath
+rename #Rename the computer as per the user's choice.
+tempCheck #Check for existence of a temop folder. If not present, will be created.
+if ($setup -eq "y") { #Download and install some basic programs.
+    Write-Host "Beginning installation of programs..." | Add-Content -Path $logPath
     download
-    setup
+    install
+} else {
+    Write-Host "Programs will not be installed." | Add-Content -Path $logPath
 }
-cleanup
+cleanup #Do some housekeeping.
 
 '' | Add-Content -Path $logPath
 "Setup completed at $(Get-TimeStamp)" | Add-Content -Path $logPath
