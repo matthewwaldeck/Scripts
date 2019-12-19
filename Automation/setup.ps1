@@ -9,7 +9,6 @@
 
     TASKS:
     -Create log
-    -Ensure basic power options are present
     -Set power mode to High Performance
     -Ensure temp file exists
     -Download and install software
@@ -27,33 +26,6 @@ function Get-TimeStamp {
     return "[{0:MM/dd/yy} at {0:HH:mm:ss}]" -f (Get-Date)
 }
 
-function enablePower {
-    #Ensures all default Windows power plans are present, with the exception of Ultimate.
-    #I need to figure out how to check which plans are already present and only install the ones that are missing.
-    #This is to prevent adding duplicate plans.
-    powercfg.exe -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a
-    Write-Host "Power plan 'Power Saving' added."
-    powercfg.exe -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e
-    Write-Host "Power plan 'Balanced' added."
-    powercfg.exe -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-    Write-Host "Power plan 'High Performance' added."
-    <#powercfg.exe -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-    Write-Host "Power plan 'Ultimate Performance' added."#>
-}
-
-function setPower {
-    #Sets Windows power option to prevent sleep and increase performance (in theory).
-    Try {
-        "Setting power plan to High Performance..."
-        $HighPerf = powercfg -l | ForEach-Object{if($_.contains("High performance")) {$_.split()[3]}}
-        $CurrPlan = $(powercfg -getactivescheme).split()[3]
-        if ($CurrPlan -ne $HighPerf) {powercfg -setactive $HighPerf}
-        "Power Plan set to High Performance." | Add-Content -Path $logPath
-    } Catch {
-        Write-Warning -Message "Unable to set power plan to high performance"
-    }
-}
-
 function tempCheck {
     #Check for existence of temp file
     $tempCheck = Test-Path C:\temp
@@ -62,6 +34,11 @@ function tempCheck {
         "Created C:\temp" | Add-Content -Path $logPath
         Write-Host "Created temp file."
     }
+}
+
+function rename {
+    $comp_name =  Read-Host "Enter desired computer name..."
+    Rename-Computer -NewName $comp_name
 }
 
 function download {
@@ -148,35 +125,24 @@ function cleanup {
     Write-Host "Cleaning up..."
     Remove-Item C:\temp -rec
     "Removed temp files." | Add-Content -Path $logPath
-
-    #Resets Windows power option back to Balanced.
-    Try {
-        "Setting power plan to Balanced..."
-        $BalPerf = powercfg -l | ForEach-Object{if($_.contains("Balanced")) {$_.split()[3]}}
-        $CurrPlan = $(powercfg -getactivescheme).split()[3]
-        if ($CurrPlan -ne $BalPerf) {powercfg -setactive $BalPerf}
-        "Power Plan set to Balanced." | Add-Content -Path $logPath
-    } Catch {
-        Write-Warning -Message "Unable to set power plan to Balanced"
-    }
 }
 
 # SCRIPT #
 "Setup started at $(Get-TimeStamp) by $env:UserName" | Set-Content -Path $logPath
 '' | Add-Content -Path $logPath
+$setup = Read-Host "Would you like to install the default power plans? (y/n)"
 
-#This does not currently function as intended. Check function for notes.
-#$power = Read-Host "Would you like to install the default power plans? (y/n)"
-if ($power -eq "y") {
-    enablePower
-}
-
-#setPower #Not functional (pun intended)
 tempCheck
-download
-#setup
+rename
+if ($setup -eq "y") {
+    "Setup initiated..." | Add-Content -Path $logPath
+    download
+    setup
+}
 cleanup
 
 '' | Add-Content -Path $logPath
 "Setup completed at $(Get-TimeStamp)" | Add-Content -Path $logPath
 Write-Host ''
+Write-Host "Setup complete - Your PC will now restart."
+Restart-Computer
