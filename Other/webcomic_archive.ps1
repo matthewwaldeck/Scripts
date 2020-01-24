@@ -4,25 +4,12 @@
     Date:       07-08-2018
     Language:   PowerShell
     Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
-    Last Edit:  07-25-2019
-    Version:    v2.1.3
+    Last Edit:  01-24-2020
+    Version:    v2.1.4
 
-    Comics:
+    COMICS:
         -Questionable Content
         -XKCD
-
-    What's New:
-        -XKCD now supported!
-        -Rewrote script utilizing functions for easy expansion.
-        -Removed the need to manually set the number of the most recent QC comic. Script is now fully automated.
-        -Now checks to see if comics already exist, and if so it does not redownload them.
-        -Provides statistics in log file when complete.
-
-    To-Do/FixMe list:
-        -Add timestamp to logfile name
-        -Add more comics
-        -Fix download counts
-        -More verbose logging
 
     NOTE:
         For regular viewing please go to the website as it supports the artist, this only exists to
@@ -41,7 +28,7 @@ function dirty_work {
     New-Item -Path "C:\Users\$env:USERNAME\Documents\Webcomics\Questionable Content\" -ItemType Directory | Out-Null
     New-Item -Path "C:\Users\$env:USERNAME\Documents\Webcomics\XKCD\" -ItemType Directory | Out-Null
 
-    #Create log file in webcomic root
+    #Create log file
     "Archive started by $env:USERNAME on $(Get-TimeStamp)" | Set-Content -Path $logPath
     "Writing files to C:\Users\$env:USERNAME\Documents\Webcomics." | Add-Content -Path $logPath
     '' | Add-Content -Path $logPath
