@@ -17,12 +17,6 @@
     -Rename computer
     -Optimize all attached drives (if requested)
     -Reboot computer (if requested)
-
-    TODO:
-    -Ask to add printers
-        -If yes, open CP dialogue and wait for window close.
-    -Clean out Start Menu tiles
-    -Uninstall useless default apps
 #>
 
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
