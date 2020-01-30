@@ -4,19 +4,28 @@
     Date:       07-26-2019
     Language:   PowerShell
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  01-24-2020
-    Version:    2.0.0
+    Last Edit:  01-30-2020
+    Version:    2.0.2
+
+    CHANGELOG:
+    -Huge code cleanup
+    -Improved logging
+    -See TODO for future plans
 
     TASKS:
     -Create log file
-    -Rename the computer
-    -Optimize all attached drives
-    -Reboot the computer (if requested)
+    -Rename computer
+    -Optimize all attached drives (if requested)
+    -Reboot computer (if requested)
+
+    TODO:
+    -Ask to add printers
+        -If yes, open CP dialogue and wait for window close.
+    -Clean out Start Menu tiles
+    -Uninstall useless default apps
 #>
 
-
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
-
 
 # FUNCTIONS #
 function Get-TimeStamp {
@@ -33,18 +42,16 @@ function rename {
 
 function optimize {
     '' | Add-Content -Path $logPath
-    if ($optimize -eq "y"){
-        Write-Host "Optimizing and Defragging drives..."
-        "$(Get-TimeStamp) - Beginning disk optimization..." | Add-Content -Path $logPath
-        $Disks=Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
-        ForEach ($Disk in $Disks) {
-            "$(Get-TimeStamp) - Beginning defrag on $Disk." | Add-Content -Path $logPath
-            defrag $Disk /O | Out-Null
-            "$(Get-TimeStamp) - Completed defrag on $Disk." | Add-Content -Path $logPath
-        }
-        Write-Host "Disk optimization complete!..."
-        "$(Get-TimeStamp) - Disk optimization complete!" | Add-Content -Path $logPath
+    Write-Host "Optimizing and Defragging drives..."
+    "$(Get-TimeStamp) - Beginning disk optimization..." | Add-Content -Path $logPath
+    $Disks=Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
+    ForEach ($Disk in $Disks) {
+        "$(Get-TimeStamp) - Beginning defrag on $Disk." | Add-Content -Path $logPath
+        defrag $Disk /O | Out-Null
+        "$(Get-TimeStamp) - Completed defrag on $Disk." | Add-Content -Path $logPath
     }
+    Write-Host "Disk optimization complete!..."
+    "$(Get-TimeStamp) - Disk optimization complete!" | Add-Content -Path $logPath
 }
 
 function fin {
@@ -67,9 +74,7 @@ function fin {
 "$(Get-TimeStamp) - Setup started by $env:UserName" | Set-Content -Path $logPath
 '' | Add-Content -Path $logPath
 
-#Set optimization and reboot flags.
-$optimize = Read-Host "Would you like to defrag any attached drives? (y/n)"
-"Optimize drives = $optimize" | Add-Content -Path $logPath
+#Set reboot flag.
 $reboot = Read-Host "Would you like to reboot your PC upon completion? (y/n)"
 "Reboot = $reboot" | Add-Content -Path $logPath
 
