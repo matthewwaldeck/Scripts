@@ -4,14 +4,18 @@
     Date:       07-26-2019
     Language:   PowerShell
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  01-31-2020
-    Version:    2.1.0
+    Last Edit:  02-03-2020
+    Version:    2.1.1
 
     TASKS:
     -Create log file
     -Rename computer
     -Ask to join Domain
     -Add printers
+    -Install a few basic tools
+        -Firefox
+        -VLC Media Player
+    -Clean up
     -Optimize all attached drives
     -Reboot computer (if requested)
 #>
@@ -75,15 +79,20 @@ function printers {
     "$(Get-TimeStamp) - Finished adding printers." | Add-Content -Path $logPath
 }
 
+function install {
+    #TODO
+    #https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-CA&attribution_code=c291cmNlPXd3dy5nb29nbGUuY29tJm1lZGl1bT1yZWZlcnJhbCZjYW1wYWlnbj0obm90IHNldCkmY29udGVudD0obm90IHNldCkmZXhwZXJpbWVudD0obm90IHNldCkmdmFyaWF0aW9uPShub3Qgc2V0KQ..&attribution_sig=477b9b68ad048e9ad2f25dcfa51f2d4053ae39e1832bd11e63fbd6eb0f4341d6
+    #Will install some basics tools, such as VLC and Firefox.
+}
+
 function cleanup {
-    #Clean up ads
+    #Clean up preinstalled "ads"
     Get-AppxPackage *officehub* | Remove-AppxPackage
     Get-AppxPackage *skypeapp* | Remove-AppxPackage
     Get-AppxPackage *getstarted* | Remove-AppxPackage
     Get-AppxPackage *solitairecollection* | Remove-AppxPackage
 
-    #There will be more apps, such as Netflix and some games, that may or may not be present on your system.
-    #I have no included these becuase they are not constant, and change every so often.
+    #Need to add a cleanup for C:\temp, as that will be used to download the installer files for the install function.
 
     #Run Disk Cleanup, wait until closed to continue
     cleanmgr.exe | Out-Null
@@ -104,6 +113,7 @@ function optimize {
 
 function fin {
     "$(Get-TimeStamp) - Setup completed!" | Add-Content -Path $logPath
+    #Set powermode to Balanced.
     $reboot = Read-Host "Would you like to reboot this computer?"
     $reboot = $reboot.ToLower()
     if ($reboot -eq "yes"){
@@ -122,10 +132,13 @@ function fin {
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log" #Log file destination
 "$(Get-TimeStamp) - Setup started by $env:UserName" | Set-Content -Path $logPath
 
+#Set powermode to High Performance.
+
 #Functions
 rename
 domain
 printers
+#install
 cleanup
 optimize
 fin
