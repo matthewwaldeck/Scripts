@@ -4,15 +4,15 @@
     Date:       02-25-2020
     Language:   PowerShell
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  02-05-2020
-    Version:    0.1.0
+    Last Edit:  02-06-2020
+    Version:    0.1.1
 
     TASKS:
     -Create a log file
     -Rename the computer
     -Join a Domain
     -Add network printers
-    -Install some basic programs *WORK IN PROGRESS*
+    -Install some basic programs
     -Clean up
     -Optimize all attached drives
     -Ask to reboot computer
@@ -21,13 +21,13 @@
 
 # FUNCTIONS #
 function Get-TimeStamp {
-    #This function simply returns a timestamp of the current date and time.
-    #It's used in the logs so I can look and see if something is taking too long.
+    <# This function simply returns a timestamp of the current date and time.
+    It's used in the logs so I can look and see if something is taking too long. #>
     return "[{0:MM/dd/yy} at {0:HH:mm:ss}]" -f (Get-Date)
 }
 
 function Install_Programs ($url_download, $program_name) {
-    #Downloads and installs some basic software such as Mozilla Firefox, Adobe Reader, and VLC Media Player.
+    #Downloads and installs the selected software package.
     $output = "$env:SystemDrive\temp\$program_name.exe"
     try {
         Write-Host "Downloading $program_name..."
@@ -131,13 +131,29 @@ if ($tempPath -eq $false) {
 }
 
 #Install some basic programs.
+Clear-Host
 do {
-    $install = Read-Host "Would you like to install a basic set of programs, an extended set, or none?"
+    #Write the available app packages to the terminal. Please expand these arrays as software is added.
+    $app_array_basic = "Adobe Reader", "Chrome"
+    $app_array_all = "Adobe Reader", "Chrome", "Firefox", "VLC"
+    Write-Host "Basic Apps:"
+    foreach ($_ in $app_array_basic) {
+        Write-Host "$_"
+    }
+    Write-Host ""
+    Write-Host "All Apps:"
+    foreach ($_ in $app_array_all) {
+        Write-Host "$_"
+    }
+
+    #Ask for a selection of apps to install, or enter "none" to skip to the next task.
+    Write-Host ""
+    $install = Read-Host "Would you like to install a BASIC set of programs, ALL available software, or NONE?"
     $install = $install.ToLower()
     if ($install -eq 'basic') {
         install_programs "$url_reader" "Adobe Reader"
         Install_Programs "$url_chrome" "Chrome"
-    } elseif ($install -eq 'extended') {
+    } elseif ($install -eq 'all') {
         install_programs "$url_reader" "Adobe Reader"
         Install_Programs "$url_chrome" "Chrome"
         install_programs "$url_firefox" "Firefox"
@@ -146,12 +162,13 @@ do {
         Write-Host "Nothing has been installed."
         "No programs were installed." | Add-Content -Path $logPath
     } else {
-        'Please make a valid selection.'
+        Write-Host "Please make a valid selection."
     }
-} while ($install -ne 'basic' -or 'extended' -or 'none')
+} while ($install -ne 'basic' -or 'all' -or 'none')
 
 #Delete installer files.
-Remove-Item –path "$env:SystemDrive\temp\Reader.exe"
+Remove-Item –path "$env:SystemDrive\temp\Adobe Reader.exe"
+Remove-Item –path "$env:SystemDrive\temp\Chrome.exe"
 Remove-Item –path "$env:SystemDrive\temp\Firefox.exe"
 Remove-Item –path "$env:SystemDrive\temp\VLC.exe"
 
@@ -177,16 +194,16 @@ Write-Host "Disk optimization complete!"
 "$(Get-TimeStamp) - Disk optimization complete!" | Add-Content -Path $logPath
 
 #Finish up
+Write-Host "Setup complete!"
 "$(Get-TimeStamp) - Setup completed!" | Add-Content -Path $logPath
 $reboot = Read-Host "Would you like to reboot this computer?"
 $reboot = $reboot.ToLower()
 if ($reboot -eq "yes"){
-    Write-Host "Setup complete! Your PC will now restart..."
+    Write-Host "Restarting your PC..."
     "$(Get-TimeStamp) - Restarting computer." | Add-Content -Path $logPath
     Start-Sleep -Seconds 5
     Restart-Computer
 } else {
-    Write-Host "Setup complete!"
     Start-Sleep -Seconds 5
     exit
 }
