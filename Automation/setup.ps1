@@ -4,8 +4,8 @@
     Date:       02-25-2020
     Language:   PowerShell
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  02-06-2020
-    Version:    0.1.1
+    Last Edit:  02-10-2020
+    Version:    0.1.2
 
     TASKS:
     -Create a log file
@@ -68,16 +68,23 @@ function Add_Printer {
 }
 
 
-# SCRIPT #
-#Set the logfile location and record the date/time the script was started.
+# VARIABLES #
 $logPath = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log"
-"$(Get-TimeStamp) - Setup started by $env:UserName" | Set-Content -Path $logPath
-
-#Download links, placed up here for easy updating.
+$domain = Get-ADDomain -Current LocalComputer
+$ask_printers = ""
+$temp_path = Test-Path -Path "$env:SystemDrive\Users\temp"
+$disks = Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
+$array_basic = "Adobe Reader", "Chrome"
+$array_all = "Adobe Reader", "Chrome", "Firefox", "VLC"
 $url_chrome = "https://www.google.com/chrome/thank-you.html?statcb=1&installdataindex=empty&defaultbrowser=0#"
 $url_firefox = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-CA&attribution_code=c291cmNlPXd3dy5nb29nbGUuY29tJm1lZGl1bT1yZWZlcnJhbCZjYW1wYWlnbj0obm90IHNldCkmY29udGVudD0obm90IHNldCkmZXhwZXJpbWVudD0obm90IHNldCkmdmFyaWF0aW9uPShub3Qgc2V0KQ..&attribution_sig=477b9b68ad048e9ad2f25dcfa51f2d4053ae39e1832bd11e63fbd6eb0f4341d6"
 $url_reader = "https://get.adobe.com/reader/download/?installer=Reader_DC_2019.021.20058_English_for_Windows&os=Windows%2010&bowser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&cr=false&stype=7468&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect"
 $url_vlc = #Need to find VLC download link.
+
+
+# SCRIPT #
+#Create logfile
+"$(Get-TimeStamp) - Setup started by $env:UserName" | Set-Content -Path $logPath
 
 #Rename the computer.
 $comp_name =  Read-Host "Enter desired computer name, or press enter to continue."
@@ -88,7 +95,6 @@ if ($comp_name -ne ""){
 }
 
 #Add the computer to a domain.
-$domain = Get-ADDomain -Current LocalComputer
 if ($domain.Name -eq ""){
     $join = Read-Host "Would you like to join a domain?"
     if ($join -eq "yes"){
@@ -120,8 +126,7 @@ do {
 } until ($ask_printers -eq "no")
 
 #Make sure temp folder exists on system drive.
-$tempPath = Test-Path -Path "$env:SystemDrive\Users\temp"
-if ($tempPath -eq $false) {
+if ($temp_path -eq $false) {
   New-Item -Path "$env:SystemDrive\Users\temp" -ItemType Directory | Out-Null
   Write-Host "Created temp directory."
   "Created temp directory!" | Set-Content -Path $logPath
@@ -131,19 +136,17 @@ if ($tempPath -eq $false) {
 }
 
 #Install some basic programs.
-Clear-Host
 do {
     #Write the available app packages to the terminal. Please expand these arrays as software is added.
-    $app_array_basic = "Adobe Reader", "Chrome"
-    $app_array_all = "Adobe Reader", "Chrome", "Firefox", "VLC"
+    Clear-Host
     Write-Host "Basic Apps:"
-    foreach ($_ in $app_array_basic) {
-        Write-Host "$_"
+    foreach ($app in $array_basic) {
+        Write-Host "$app"
     }
     Write-Host ""
     Write-Host "All Apps:"
-    foreach ($_ in $app_array_all) {
-        Write-Host "$_"
+    foreach ($app in $array_all) {
+        Write-Host "$app"
     }
 
     #Ask for a selection of apps to install, or enter "none" to skip to the next task.
@@ -184,11 +187,10 @@ cleanmgr.exe | Out-Null
 #Optimize all attached disks.
 Write-Host "Optimizing and Defragging drives..."
 "$(Get-TimeStamp) - Beginning disk optimization..." | Add-Content -Path $logPath
-$Disks=Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
-ForEach ($Disk in $Disks) {
-    "$(Get-TimeStamp) - Beginning defrag on $Disk." | Add-Content -Path $logPath
-    defrag $Disk /O | Out-Null
-    "$(Get-TimeStamp) - Completed defrag on $Disk." | Add-Content -Path $logPath
+ForEach ($disk in $disks) {
+    "$(Get-TimeStamp) - Beginning defrag on $disk." | Add-Content -Path $logPath
+    defrag $disk /O | Out-Null
+    "$(Get-TimeStamp) - Completed defrag on $disk." | Add-Content -Path $logPath
 }
 Write-Host "Disk optimization complete!"
 "$(Get-TimeStamp) - Disk optimization complete!" | Add-Content -Path $logPath
