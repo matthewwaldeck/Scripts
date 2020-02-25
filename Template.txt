@@ -1,0 +1,11 @@
+<# DESCRIPTION
+    Author:     Matt Waldeck
+    Created:    MM-DD-YYYY
+    Purpose:    WHAT DO
+    Last Edit:  MM-DD-YYYY
+    Version:    v0.0.0
+#>
+
+#CONSTANTS AND VARIABLES
+
+#MAIN CODE
