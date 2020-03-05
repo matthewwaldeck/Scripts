@@ -3,8 +3,8 @@
     Author:     Matt Waldeck
     Created:    07-26-2019
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  02-28-2020
-    Version:    0.2.0
+    Last Edit:  03-04-2020
+    Version:    0.2.1
 
     TASKS:
     -Create a log file
@@ -55,6 +55,7 @@ function Install_Programs ($url_download, $program_name) {
 $disks = Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
 $domain_current = Get-ADDomain -Current LocalComputer
 $domain_new = ""
+$domain_join = ""
 $install = ""
 $path_log = "C:\Users\$env:UserName\Desktop\setup_$(get-date -f yyyy-MM-dd-HHmm).log"
 $path_temp = "$env:SystemDrive\temp"
@@ -93,8 +94,8 @@ if (Test-Path -Path $path_rename -eq $false) {
 
 #Add the computer to a domain.
 if ($domain_current.Name -eq ""){
-    $join = Read-Host "Would you like to join a domain?"
-    if ($join -eq "yes"){
+    $domain_join = Read-Host "Would you like to join a domain?"
+    if ($domain_join -eq "yes"){
         $domain_new = Read-Host "What is the domain name?"
         try {
             Add-Computer -DomainName $domain_new
@@ -138,13 +139,17 @@ do {
 #Clean up temp folder.
 Remove-Item –path "$env:SystemDrive\temp\Adobe Reader.exe"
 Remove-Item –path "$env:SystemDrive\temp\Chrome.exe"
+Remove-Item –path "$env:SystemDrive\temp\Citrix.exe"
 Remove-Item -path $path_rename
 
-#Get rid of a few preinstalled ads
-Get-AppxPackage *officehub* | Remove-AppxPackage
-Get-AppxPackage *skypeapp* | Remove-AppxPackage
-Get-AppxPackage *getstarted* | Remove-AppxPackage
-Get-AppxPackage *solitairecollection* | Remove-AppxPackage
+#Remove some preinstalled apps
+Get-AppxPackage *3dbuilder* | Remove-AppxPackage #3D Builder
+Get-AppxPackage *getstarted* | Remove-AppxPackage #Get Started
+Get-AppxPackage *officehub* | Remove-AppxPackage #Get Office
+Get-AppxPackage *skypeapp* | Remove-AppxPackage #Get Skype
+Get-AppxPackage *solitairecollection* | Remove-AppxPackage #Solitaire Collection
+Get-AppxPackage *zunemusic* | Remove-AppxPackage #Groove Music
+Get-AppxPackage *zunevideo* | Remove-AppxPackage #Movies & TV
 
 #Run Disk Cleanup, wait until closed to continue.
 cleanmgr.exe | Out-Null
