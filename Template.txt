@@ -6,6 +6,8 @@
     Version:    v0.0.0
 #>
 
+# FUNCTIONS #
+
 #CONSTANTS AND VARIABLES
 
 #MAIN CODE
