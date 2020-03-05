@@ -5,10 +5,7 @@
     Language:   PowerShell
     Purpose:    Runs throguh basic troubleshooting steps for a broken Start Menu in Windows 10.
     Last Edit:  01-30-2020
-    Version:    1.0.0
-
-    CHANGELOG:
-    -Initial Build
+    Version:    1.0.1
 
     TASKS:
     -Run SFC scan
@@ -17,7 +14,7 @@
 
 #Run SFC scan
 Write-Host "Scanning file system for errors..."
-sfc /scannow | Set-Content -Path "C:\Users\$env:USERNAME"
+sfc /scannow | Set-Content -Path "$env:SystemDrive\Users\$env:USERNAME"
 Write-Host "Scan complete. Results can be found on your desktop."
 
 #Reinstall Windows apps
