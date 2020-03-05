@@ -16,7 +16,7 @@ Write-Output "Generating C:\users\$env:username\adusers.csv..."
 
 # Select all computers in the domain and pick out the specified information
 Get-ADUser -Filter * | Select-Object -Property Name, ObjectClass, Enabled, UserPrincipalName, DistinguishedName |`
-Export-Csv C:\adusers.csv #Export to root of C:\
+Export-Csv C:\adusers.csv -NoTypeInformation #Export to root of C:\
 
 # Console feedback
 Write-Output "Done!"
