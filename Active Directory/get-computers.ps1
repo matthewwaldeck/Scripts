@@ -16,7 +16,7 @@ Write-Output "Generating C:\users\$env:username\adcomputers.csv..."
 
 # Select all computers in the domain and pick out the specified information
 Get-ADComputer -Filter * | Select-Object -Property Name, ObjectClass, Enabled, DistinguishedName |`
-Export-Csv C:\adcomputers.csv #Export to root of C:\
+Export-Csv C:\adcomputers.csv -NoTypeInformation #Export to root of C:\
 
 # Console feedback
 Write-Output "Done!"
