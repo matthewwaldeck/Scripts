@@ -1,6 +1,7 @@
 @ECHO off
 :: Downloads the Cowan TeamViewer app on a user's computer.
 :: Makes a copy on the desktop and renames to "CIG".
+:: Last updated May 8th, 2020 by Matt Waldeck
 
 :: Download custom TeamViewer client
 ECHO Downloading...
@@ -12,7 +13,9 @@ ECHO Done!
 :: Copy downloaded file to desktop and rename to CIG.exe
 :1
 if exist "%USERPROFILE%\Downloads\cowanqs.exe" (
-copy %USERPROFILE%\Downloads\cowanqs.exe %USERPROFILE%\Desktop\CIG.exe
+ECHO Installing...
+MOVE %USERPROFILE%\Downloads\cowanqs.exe %USERPROFILE%\Desktop\CIG.exe
+ECHO Done!
 pause
 exit
 ) else (
