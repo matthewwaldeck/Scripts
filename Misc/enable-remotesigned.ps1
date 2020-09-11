@@ -1,10 +1,9 @@
 <# DESCRIPTION
     Developer:  Matt Waldeck
     Date:       10-24-2019
-    Language:   PowerShell
-    Purpose:    Sets the execution policy such that the scripts I've written can be run on our computers.
-    Last Edit:  10-24-2019
-    Version:    v1.0.0
+    Purpose:    Sets the execution policy such that scripts can be run.
+    Last Edit:  09-11-2020
+    Version:    v1.0.1
 #>
 
 # Self-elevate the script if required

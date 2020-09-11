@@ -2,10 +2,9 @@
     DESCRIPTION
     Developer:  Mike Rotec/Matt Waldeck
     Date:       06-18-2018
-    Language:   PowerShell
     Purpose:    Will perform routine maintenance tasks for workstations.
-    Last Edit:  10-24-2019
-    Version:    v1.4.2
+    Last Edit:  09-11-2020
+    Version:    v1.4.3
 
     Tasks:
       -Clean up temp files

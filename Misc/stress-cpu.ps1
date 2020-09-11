@@ -1,10 +1,9 @@
 <# DESCRIPTION
     Developer:  Matt Waldeck
     Date:       07-04-2019
-    Language:   PowerShell
-    Purpose:    Stresses CPU to 100% using basic math jobs.
-    Last Edit:  07-31-2019
-    Version:    v1.1.2
+    Purpose:    Pins CPU to 100% using basic math jobs. Useful for testing system stability or cooling.
+    Last Edit:  09-10-2020
+    Version:    v1.1.3
 #>
 
 # Warning

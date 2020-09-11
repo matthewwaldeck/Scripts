@@ -2,10 +2,9 @@
     DESCRIPTION
     Developer:  Matt Waldeck
     Date:       06-27-2019
-    Language:   PowerShell
     Purpose:    Lists basic system info.
-    Last Edit:  07-16-2019
-    Version:    v1.1.1
+    Last Edit:  09-11-2020
+    Version:    v1.1.2
 #>
 
 #Getting some information
@@ -79,10 +78,11 @@ function storage {
 
 
 ### Script ###
-intro | Set-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
-system | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
-hardware | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
-network | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
-storage | Add-Content "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+$logFile = "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+intro | Set-Content $logFile
+system | Add-Content $logFile
+hardware | Add-Content $logFile
+network | Add-Content $logFile
+storage | Add-Content $logFile
 Write-Output "File written to C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
 ''

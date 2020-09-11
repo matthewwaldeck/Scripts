@@ -2,10 +2,9 @@
     DESCRIPTION
     Developer:  Matt Waldeck
     Date:       01-30-2020
-    Language:   PowerShell
     Purpose:    Runs throguh basic troubleshooting steps for a broken Start Menu in Windows 10.
-    Last Edit:  01-30-2020
-    Version:    1.0.1
+    Last Edit:  09-11-2020
+    Version:    1.0.2
 
     TASKS:
     -Run SFC scan

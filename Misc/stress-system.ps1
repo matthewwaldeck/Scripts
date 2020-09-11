@@ -1,10 +1,9 @@
 <# DESCRIPTION
     Developer:  Matt Waldeck
     Date:       07-04-2019
-    Language:   PowerShell
     Purpose:    Fills up all available RAM, then holds the CPU at 100% utilization.
-    Last Edit:  07-31-2019
-    Version:    v1.2.1
+    Last Edit:  09-11-2020
+    Version:    v1.2.2
 
     Note:
     Memory test pulled from Luke Brennan's "Beat Up Windows" script
@@ -20,7 +19,7 @@ Write-Output "Saturating RAM..."
 $a = "a" * 256MB
 $growArray = @()
 $growArray += $a
-# leave 512Mb for the OS to survive.
+# Leave 512Mb for the OS to survive.
 $HEADROOM=512
 $bigArray = @()
 $ram = $physMB - $psPerfMEM.NextValue()
@@ -34,7 +33,7 @@ while ($ram -lt $MAXRAM) {
 }
 Write-Output "Done."
 
-# Now let's heat up the processor
+# This checks for how many threads are in the CPU, and starts that many jobs.
 $coreCount = Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors
 Write-Output "Running jobs on $coreCount threads..."
 # For each item in $coureCount, start a job.

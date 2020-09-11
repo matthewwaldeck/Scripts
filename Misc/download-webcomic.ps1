@@ -2,10 +2,9 @@
     DESCRIPTION
     Developer:  Matt Waldeck
     Date:       07-08-2018
-    Language:   PowerShell
     Purpose:    Downloads a copy of my favourite Webcomics, primarily for archival purposes.
-    Last Edit:  01-24-2020
-    Version:    v2.1.4
+    Last Edit:  09-11-2020
+    Version:    v2.1.5
 
     COMICS:
         -Questionable Content

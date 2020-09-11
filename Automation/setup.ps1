@@ -65,10 +65,11 @@ $print_server = ""
 $url_adobe = "https://get.adobe.com/reader/download/?installer=Reader_DC_2020.006.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&stype=7491&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect"
 $url_chrome = "https://www.google.com/chrome/thank-you.html?statcb=1&installdataindex=empty&defaultbrowser=0#"
 $url_citrix = "https://www.citrix.com/downloads/workspace-app/windows/workspace-app-for-windows-latest.html#ctx-dl-eula"
+$url_VLC = "https://get.videolan.org/vlc/3.0.11/win64/vlc-3.0.11-win64.exe"
 
 
 # SCRIPT #
-#Create logfile
+#Create logfile for troubleshooting.
 "$(Get-TimeStamp) - Setup started by $env:UserName" | Set-Content -Path $path_log
 
 #Make sure temp folder exists on system drive.
@@ -126,8 +127,9 @@ do {
     $install = $install.ToLower()
     if ($install -eq 'yes') {
         install_programs "$url_adobe" "Adobe Reader"
-        Install_Programs "$url_chrome" "Chrome"
-        Install_Programs "$url_citrix" "Citrix"
+        Install_Programs "$url_chrome" "Google Chrome"
+        Install_Programs "$url_citrix" "Citrix Workspace"
+        Install_Programs "$url_vlc" "VLC Media Player"
     } elseif ($install -eq 'no') {
         Write-Host "Nothing has been installed."
         "No programs were installed." | Add-Content -Path $path_log
