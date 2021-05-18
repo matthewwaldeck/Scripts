@@ -4,7 +4,7 @@
     Date:       06-27-2019
     Purpose:    Lists basic system info.
     Last Edit:  09-11-2020
-    Version:    v1.1.2
+    Version:    v1.1.3
 #>
 
 #Getting some information
@@ -78,11 +78,11 @@ function storage {
 
 
 ### Script ###
-$logFile = "C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+$logFile = "C:\Users\$env:USERNAME\Downloads\$env:COMPUTERNAME.txt"
 intro | Set-Content $logFile
 system | Add-Content $logFile
 hardware | Add-Content $logFile
 network | Add-Content $logFile
 storage | Add-Content $logFile
-Write-Output "File written to C:\Users\$env:USERNAME\Desktop\$env:COMPUTERNAME.txt"
+Write-Output "File written to C:\Users\$env:USERNAME\Downloads\$env:COMPUTERNAME.txt"
 ''
