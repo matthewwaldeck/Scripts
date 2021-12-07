@@ -2,8 +2,10 @@
     Author:     Matt Waldeck
     Created:    12-03-2021
     Purpose:    Discovers the installed Office 365 license, and allows you to remove them easily.
-    Last Edit:  12-03-2021
-    Version:    v1.0.0
+                Does not modify registry or clean up yet.
+    Last Edit:  12-07-2021
+    Version:    v1.0.1
+    Notes:      https://docs.microsoft.com/en-us/office/troubleshoot/activation/reset-office-365-proplus-activation-state
 #>
 
 # CONSTANTS AND VARIABLES #
