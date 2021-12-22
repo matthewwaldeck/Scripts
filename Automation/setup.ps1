@@ -3,8 +3,7 @@
     Author:     Matt Waldeck
     Created:    07-26-2019
     Purpose:    Automates the basic setup process for a new Windows PC.
-    Last Edit:  03-04-2020
-    Version:    0.2.1
+    Version:    0.3.0
 
     TASKS:
     -Create a log file
@@ -13,7 +12,6 @@
     -Add network printers
     -Install some basic programs
     -Clean up
-    -Optimize all attached drives
     -Ask to reboot computer
 #>
 
@@ -21,7 +19,7 @@
 # FUNCTIONS #
 function Get-TimeStamp {
     <# This function simply returns a timestamp of the current date and time.
-    It's used in the logs so I can look and see if something is taking too long. #>
+    It's used in the logs so I can see if something is taking too long. #>
     return "[{0:MM/dd/yy} at {0:HH:mm:ss}]" -f (Get-Date)
 }
 
@@ -33,7 +31,7 @@ function Install_Programs ($url_download, $program_name) {
         "Downloading $program_name..." | Set-Content -Path $path_log
         (New-Object System.Net.WebClient).DownloadFile($url_download, $output)
         Write-Host "Download complete! Running install file..."
-        "Download complete! Running install file..." | Set-Content -Path $path_log
+        "Download complete! Installing..." | Set-Content -Path $path_log
         Start-Process $output "/S"
         Write-Host "$program_name has been installed successfully!"
         "$program_name has been installed!" | Set-Content -Path $path_log
@@ -43,7 +41,7 @@ function Install_Programs ($url_download, $program_name) {
         "$program_name failed to download!" | Set-Content -Path $path_log
         $_ | Set-Content -Path $path_log
     } catch {
-        #Install failed.
+        #Installation failed.
         Write-Host '$program_name failed to install!'
         "$program_name failed to install!" | Set-Content -Path $path_log
         $_ | Set-Content -Path $path_log
@@ -63,9 +61,11 @@ $path_rename = "$env:SystemDrive\temp\rename.flag"
 $print_ask = ""
 $print_server = ""
 $url_adobe = "https://get.adobe.com/reader/download/?installer=Reader_DC_2020.006.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&stype=7491&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect"
-$url_chrome = "https://www.google.com/chrome/thank-you.html?statcb=1&installdataindex=empty&defaultbrowser=0#"
-$url_citrix = "https://www.citrix.com/downloads/workspace-app/windows/workspace-app-for-windows-latest.html#ctx-dl-eula"
-$url_VLC = "https://get.videolan.org/vlc/3.0.11/win64/vlc-3.0.11-win64.exe"
+$url_firefox = "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US"
+$url_github = "https://central.github.com/deployments/desktop/desktop/latest/win32"
+$url_spotify = "https://download.scdn.co/SpotifySetup.exe"
+$url_vscode = "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user"
+$url_vlc = "https://get.videolan.org/vlc/3.0.11/win64/vlc-3.0.11-win64.exe"
 
 
 # SCRIPT #
@@ -120,15 +120,17 @@ if ($print_ask -eq "yes") {
     Invoke-Item -Path $print_server
 }
 
-#Install some basic programs.
+#This needs to be updated. See below.
 do {
     Write-Host ""
     $install = Read-Host "Would you like to install some basic software?"
     $install = $install.ToLower()
     if ($install -eq 'yes') {
         install_programs "$url_adobe" "Adobe Reader"
-        Install_Programs "$url_chrome" "Google Chrome"
-        Install_Programs "$url_citrix" "Citrix Workspace"
+        Install_Programs "$url_firefox" "Firefox"
+        Install_Programs "$url_github" "GitHub Desktop"
+        Install_Programs "$url_spotify" "Spotify"
+        Install_Programs "$url_vscode" "Visual Studio Code"
         Install_Programs "$url_vlc" "VLC Media Player"
     } elseif ($install -eq 'no') {
         Write-Host "Nothing has been installed."
@@ -139,9 +141,12 @@ do {
 } until ($install -eq "yes" -or $install -eq "no")
 
 #Clean up temp folder.
-Remove-Item –path "$env:SystemDrive\temp\Adobe Reader.exe"
-Remove-Item –path "$env:SystemDrive\temp\Chrome.exe"
-Remove-Item –path "$env:SystemDrive\temp\Citrix.exe"
+Remove-Item -path "$env:SystemDrive\temp\Adobe Reader.exe"
+Remove-Item -path "$env:SystemDrive\temp\Firefox.exe"
+Remove-Item -path "$env:SystemDrive\temp\GitHub Desktop"
+Remove-Item -path "$env:SystemDrive\temp\Spotify"
+Remove-Item -path "$env:SystemDrive\temp\Visual Studio Code"
+Remove-Item -path "$env:SystemDrive\temp\VLC Media Player"
 Remove-Item -path $path_rename
 
 #Remove some preinstalled apps
@@ -157,7 +162,7 @@ Get-AppxPackage *zunevideo* | Remove-AppxPackage #Movies & TV
 cleanmgr.exe | Out-Null
 
 #Optimize all attached disks.
-Write-Host "Optimizing and Defragging drives..."
+Write-Host "Beginning disk optimization..."
 "$(Get-TimeStamp) - Beginning disk optimization..." | Add-Content -Path $path_log
 ForEach ($disk in $disks) {
     "$(Get-TimeStamp) - Beginning defrag on $disk." | Add-Content -Path $path_log
