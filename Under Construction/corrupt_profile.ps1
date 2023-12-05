@@ -4,7 +4,7 @@
         AUTHOR:  Matt Waldeck
         VERSION: 0.2.0
         DATE:    2023/12/05
-        LINK:    https://github.com/Gediren/Windows-Scripts/blob/master/Under Construction/corrupt_profile.ps1
+        LINK:    https://github.com/Gediren/Windows-Scripts/blob/master/Under%20Construction/corrupt_profile.ps1
 
         VERSION HISTORY
             0.1.0 - 2023.11.09
