@@ -1,9 +1,7 @@
 #! /bin/bash
 
-#Linux setup script version 0.5 by Matt Waldeck
+#Linux setup script version 1.0.0. by Matt Waldeck
 #This script will automate some of the setup on new Debian-based installs.
-#Support will be added for Arch-based distros later.
-#See doc in CherryTree for more info and future plans.
 
 #Hardware Check
 clear
@@ -55,15 +53,10 @@ clear
 sudo apt update
 sudo apt upgrade -y
 
-#Install Utilities
-sudo apt install curl -y
-sudo apt install git -y
-sudo apt install gnome-tweaks -y
-sudo apt install htop -y
-sudo apt install lynx -y
-sudo apt install neofetch -y
-
 #Install necessary repos.
+#Install Curl
+sudo apt install curl -y
+
 #Spotify
 curl -sS https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
@@ -81,24 +74,15 @@ sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packag
 sudo apt install apt-transport-https
 rm -f packages.microsoft.gpg
 
-#Install Software
+#Install applications & clean up
 sudo apt update
-sudo apt install cherrytree -y
-sudo apt install code -y
-sudo apt install firefox -y
-sudo apt install lutris -y #Not found.
-sudo apt install qbittorrent -y
-sudo apt install signal-desktop -y
-sudo apt install spotify -y
-sudo apt install vlc -y
+sudo apt install cherrytree code firefox qbittorrent signal-desktop spotify vlc git gnome-tweaks htop lynx neofetch -y
+sudo apt autoremove
 
 #Set up Git
 git config --global user.email "$email"
 git config --global user.name "$name"
 
-#Clean Up
-sudo apt autoremove
-
-#Complete
+#Fin
 clear
 neofetch
