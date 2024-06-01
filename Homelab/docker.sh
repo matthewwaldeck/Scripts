@@ -8,7 +8,6 @@
 # Links
 # Docker Engine: https://docs.docker.com/engine/install/ubuntu/
 # Portainer: https://docs.portainer.io/start/install-ce/server/docker/linux
-# UniFi: https://github.com/jacobalberty/unifi-docker
 # Uptime Kuma: https://github.com/louislam/uptime-kuma
 
 # Run the following command to uninstall all conflicting packages:
