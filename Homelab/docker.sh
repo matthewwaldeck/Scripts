@@ -37,7 +37,7 @@ sudo docker run -d --name portainer --restart=always -p 8000:8000 -p 9443:9443 -
 # Install Heimdall.
 whoami username
 mkdir /home/$username/Docker
-sudo docker run -d --name heimdall --restart=always -v /home/$username/docker/heimdall:/config -e PGID=1000 -e PUID=1000 -p 8080:80 -p 8443:443 linuxserver/heimdall
+sudo docker run -d --name heimdall --restart=always -p 8080:80 -p 8443:443 -e PGID=1000 -e PUID=1000 -v /home/$username/docker/heimdall:/config linuxserver/heimdall
 
 # Install Uptime Kuma.
 sudo docker run -d --name uptime-kuma --restart=always -p 3001:3001 -v uptime-kuma:/app/data louislam/uptime-kuma:1
