@@ -2,8 +2,8 @@
     .NOTES        
         NAME:    setup.ps1
         AUTHOR:  Matt Waldeck
-        VERSION: 0.5.0
-        DATE:    2023/12/06
+        VERSION: 0.6.0
+        DATE:    2024/06/03
         LINK:    https://github.com/Gediren/Windows-Scripts/blob/master/Automation/setup.ps1
 
         VERSION HISTORY
@@ -15,6 +15,10 @@
                 Improved comments and readability.
                 Merged console and logging into procedure to cut out repetitive code.
                 General usability & readability improvements.
+            0.6.0 - 2024.06.03
+                Added more Microsoft AppX packages to cleanup.
+                Added antivirus removal to cleanup.
+                Increased readability of section titles.
     
     .SYNOPSIS
         Set up a new Windows computer.
@@ -33,12 +37,15 @@
         A log file on the current user's desktop.
 
     .LINK
-        https://github.com/Gediren/
+        https://github.com/mattwaldeck/
 #>
 
 
 
+
+#####################
 ##### FUNCTIONS #####
+#####################
 function Log ($comment) {
     #This function writes output to the console, and writes the same line to the logfile.
     #It will append the date and time to the beginning of the log entry.
@@ -72,9 +79,13 @@ function Install ($url_download, $program_name) {
 
 
 
+
+################################
 ##### ARRAYS AND VARIABLES #####
+################################
+
 #Constants
-$arr_bloat = @('3dbuilder','getstarted','officehub','skypeapp','solitairecollection','zunemusic','zunevideo')
+$arr_ms_bloat = @('3d','getstarted','gethelp','officehub','skypeapp','solitairecollection','zunemusic','zunevideo')
 $arr_install = @('Reader','Firefox','GitHub', 'Notepad++','Spotify','VSCode','VLC')
 $disks = Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
 $domain_current = Get-ADDomain -Current LocalComputer
@@ -101,10 +112,44 @@ $url_vlc = "https://get.videolan.org/vlc/3.0.20/win32/vlc-3.0.20-win32.exe"
 
 
 
+
+##########################
+##### HARDWARE CHECK #####
+##########################
+$cpu = Get-WMIObject -Class Win32_Processor | Select-Object name
+$memory = [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
+Write-Host "CPU: $cpu" 
+Write-Host "Memory: $memory"
+foreach ($_ in $storage) {
+    'Drive: ' + $_.DeviceID + '\'
+    if ($_.VolumeName -ne '') {
+    'Name: ' + $_.VolumeName
+    }
+    'Capacity: ' + [math]::Round($_.Size / 1GB,2) + 'GB'
+    'Used: ' + [math]::Round(($_.Size - $_.FreeSpace) / 1GB,2) + 'GB'
+    'Free: ' + [math]::Round($_.FreeSpace / 1GB,2) + 'GB'
+    ''
+}
+Write-Host "Close this window to cancel, or"
+Pause
+
+
+
+
+#################
 ##### SETUP #####
+#################
+
 #Create log file for troubleshooting.
 Log "Setup started by $env:UserName" | Set-Content -Path $path_log
 Write-Host
+
+#Close browsers.
+taskkill /im microsoftedge.exe /f > NUL 2>&1
+taskkill /im iexplore.exe /f > NUL 2>&1
+taskkill /im chrome.exe /f > NUL 2>&1
+taskkill /im firefox.exe /f > NUL 2>&1
+taskkill /im opera.exe /f > NUL 2>&1
 
 #Make sure temp folder exists on system drive.
 if (Test-Path -Path $path_temp -eq $false) {
@@ -198,23 +243,42 @@ do {
 
 
 
+
+###################
 ##### CLEANUP #####
+###################
+
 #Remove some preinstalled apps
 Write-Host
-Log "Cleaning up preinstalled bloatware and adware..."
+Log "Cleaning up preinstalled junk..."
 Start-Sleep -Seconds 2
 
-#Get-AppXPackage | where-object {$_.name -notlike '*store*'} | Remove-AppxPackage
-#Just remove all, except store, and then install those you want.
-#Note that it removes everything, like Cortana, widgets, game bar.
-
-foreach ($_ in $arr_bloat) {
+#Microsoft AppX bloat removal.
+foreach ($_ in $arr_ms_bloat) {
     try {
-        Get-AppxPackage *$_* | Remove-AppxPackage
+        Get-AppxPackage *$_* -AllUsers | Remove-AppxPackage
+        Get-AppXProvisionedPackage -Online | Where-Object DisplayName -EQ $packages | Remove-AppxProvisionedPackage -Online
         Log "$_ has been removed."
     } catch {
         Log "Failed to remove $_."
     }
+}
+
+#Antivirus removal.
+if (exist "%PROGRAMFILES(X86)%\Norton Security") {
+    Invoke-WebRequest https://norton.com/nrnr -OutFile $path_temp/Norton_Remover.exe
+    Start-Process "$path_temp/Norton_Remover.exe" /norestart /noreboot > NUL 2>&1
+    pause
+} elsif (exist "%PROGRAMFILES(X86)%\Norton Internet Security") {
+    Invoke-WebRequest https://norton.com/nrnr -OutFile $path_temp/Norton_Remover.exe
+    Start-Process "./tools/Norton_Remover.exe" /norestart /noreboot > NUL 2>&1
+    pause
+} elsif (exist "%PROGRAMFILES(X86)%\McAfee") {
+    Invoke-WebRequest https://download.mcafee.com/molbin/iss-loc/SupportTools/MCPR/MCPR.exe -OutFile $path_temp/McAfee_Remover.exe
+    Start-Process "$path_temp/McAfee_Remover.exe" /norestart /noreboot > NUL 2>&1
+    pause
+} elsif (exist "%PROGRAMFILES%\Spybot - Search & Destroy 2") {
+    Start-Process "%PROGRAMFILES%\Spybot - Search & Destroy 2\unins000.exe" > NUL 2>&1
 }
 
 #Optimize all attached disks.
@@ -234,7 +298,11 @@ Clear-RecycleBin #Empty the Recycle Bin.
 
 
 
+
+###############
 ##### FIN #####
+###############
+
 Write-Host
 Log "Setup completed!"
 $reboot = Read-Host "Would you like to reboot this computer? (y/n)"
