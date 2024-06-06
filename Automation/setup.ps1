@@ -85,7 +85,6 @@ function Install ($url_download, $program_name) {
 ################################
 
 #Constants
-$arr_ms_bloat = @('3d','getstarted','gethelp','officehub','skypeapp','solitairecollection','zunemusic','zunevideo')
 $arr_install = @('Reader','Firefox','GitHub', 'Notepad++','Spotify','VSCode','VLC')
 $disks = Get-WmiObject -Class win32_logicaldisk | Where-Object {$PSItem.DriveType -eq 3} | Select-Object Name -ExpandProperty Name
 $domain_current = Get-ADDomain -Current LocalComputer
@@ -110,6 +109,18 @@ $url_spotify = "https://download.scdn.co/SpotifySetup.exe"
 $url_vscode = "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user"
 $url_vlc = "https://get.videolan.org/vlc/3.0.20/win32/vlc-3.0.20-win32.exe"
 
+#MS Bloat
+$arr_ms_bloat = @(
+    '3d'
+    'getstarted'
+    'gethelp'
+    'officehub'
+    'skypeapp'
+    'solitairecollection'
+    'zunemusic'
+    'zunevideo'
+)
+
 
 
 
@@ -117,9 +128,8 @@ $url_vlc = "https://get.videolan.org/vlc/3.0.20/win32/vlc-3.0.20-win32.exe"
 ##### HARDWARE CHECK #####
 ##########################
 $cpu = Get-WMIObject -Class Win32_Processor | Select-Object name
-$memory = [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
 Write-Host "CPU: $cpu" 
-Write-Host "Memory: $memory"
+Write-Host "Memory: " + [math]::Round($system.TotalPhysicalMemory / 1GB,1) + 'GB'
 foreach ($_ in $storage) {
     'Drive: ' + $_.DeviceID + '\'
     if ($_.VolumeName -ne '') {
@@ -145,11 +155,11 @@ Log "Setup started by $env:UserName" | Set-Content -Path $path_log
 Write-Host
 
 #Close browsers.
-taskkill /im microsoftedge.exe /f > NUL 2>&1
-taskkill /im iexplore.exe /f > NUL 2>&1
-taskkill /im chrome.exe /f > NUL 2>&1
-taskkill /im firefox.exe /f > NUL 2>&1
-taskkill /im opera.exe /f > NUL 2>&1
+taskkill /im microsoftedge.exe /f > Out-Null 2>&1
+taskkill /im iexplore.exe /f > Out-Null 2>&1
+taskkill /im chrome.exe /f > Out-Null 2>&1
+taskkill /im firefox.exe /f > Out-Null 2>&1
+taskkill /im opera.exe /f > Out-Null 2>&1
 
 #Make sure temp folder exists on system drive.
 if (Test-Path -Path $path_temp -eq $false) {
@@ -216,7 +226,7 @@ do {
     Write-Host
     $install = Read-Host "Would you like to install any software? (y/n)"
     $install = $install.ToLower()
-    if ($install -eq "*y*") {
+    if ($install -like "*y*") {
         do {
             Clear-Host
             foreach ($_ in $arr_install) {
@@ -234,7 +244,7 @@ do {
                 Default {Write-Host "Please choose from the applications listed, or type done."}
             }
         } until ($app -eq 'done')
-    } elseif ($install -eq 'no') {
+    } elseif ($install -like "*n*") {
         Log "No programs were installed."
     } else {
         Log "Please make a valid selection."
